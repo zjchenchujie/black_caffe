@@ -5,6 +5,8 @@
 #ifndef BLACK_CAFFE_SYNCEDMEN_HPP
 #define BLACK_CAFFE_SYNCEDMEN_HPP
 
+#include <cstring>
+
 namespace caffeine {
 
 class SyncedMemory {
@@ -18,13 +20,14 @@ public:
     const void* gpu_data();
     void* mutable_cpu_data();
     void* mutable_gpu_data();
+    enum SyncedHead { UNINITIATED, HEAD_AT_CPU, HEAD_AT_GPU, SYNCED };
+    SyncedHead head(){ return head_;}
 private:
     void to_cpu();
     void to_gpu();
     void *cpu_ptr_;
     void *gpu_ptr_;
     size_t size_;
-    enum SyncedHead { UNINITIATED, HEAD_AT_CPU, HEAD_AT_GPU, SYNCED };
     SyncedHead head_;
 };    // class SyncedMemory
 } // namespace caffeine

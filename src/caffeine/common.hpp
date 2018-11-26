@@ -17,9 +17,9 @@ namespace caffeine {
 
 static std::ostream nullout(0);
 
-#define LOG_IF(condition) \
+#define CUDA_LOG_IF(condition) \
     ((condition) == cudaSuccess) ? nullout : std::cout
 #define CUDA_CHECK(condition) \
-    LOG_IF(condition) << "Check failed: " #condition " "
+    CUDA_LOG_IF(condition) << "Check failed: " #condition " "
 
 #endif //BLACK_CAFFE_COMMON_H
