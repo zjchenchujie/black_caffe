@@ -28,7 +28,7 @@ CUDA_LIB_DIR = $(CUDA_DIR)/lib64
 
 INCLUDE_DIRS := $(CUDA_INCLUDE_DIR) ./
 LIBRARY_DIRS := $(CUDA_LIB_DIR)
-LIBRARIES := cudart cublas
+LIBRARIES := cudart cublas cuda protobuf glog
 WARNINGS := -Wall
 
 CXXFLAGS += $(foreach includedir,$(INCLUDE_DIRS),-I$(includedir)) -fPIC
