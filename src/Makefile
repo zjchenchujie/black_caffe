@@ -18,7 +18,7 @@ PROTO_SRCS := $(wildcard caffeine/proto/*.proto)
 PROTO_GEN_HEADER := $(PROTO_SRCS:.proto=.pb.h)
 PROTO_GEN_CC := $(PROTO_SRCS:.proto=.pb.cc)
 CXX_OBJS := $(CXX_SRCS:.cpp=.o)
-PROTO_OBJS := $(PTORO_GEN_CC:.cc=.o)
+PROTO_OBJS := $(PROTO_SRCS:.proto=.pb.o)
 OBJS := $(CXX_OBJS) $(PROTO_OBJS)
 TEST_OBJS := $(TEST_SRCS:.cpp=.o)
 
@@ -47,7 +47,8 @@ $(NAME): $(PROTO_GEN_CC) $(OBJS)
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(WARNING) $(OBJS) -shared -o $(NAME)
 
 $(TEST_NAME):$(TEST_OBJS) $(OBJS)
-	$(CXX) $(LDFALGS) $(WARNING) $(TEST_OBJS) $(OBJS) -o $(TEST_NAME)
+	$(CXX) $(TEST_OBJS) $(OBJS) -o $(TEST_NAME) $(LDFALGS) $(WARNING)
+	./$(TEST_NAME)
 
 $(PROTO_GEN_CC): $(PROTO_SRCS)
 	protoc $(PROTO_SRCS) --cpp_out=.
