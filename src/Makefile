@@ -5,37 +5,34 @@
 # using program.NAME, program.C_SRCS, etc. There are no structs in Make, so we use this convention
 # to keep track of attributes that all belong to the same target or program.
 #
-
-PROJECT = caffeine
-
+PROJECT := caffeine
 NAME := lib$(PROJECT).so
 TEST_NAME := test_$(PROJECT)
-
 CXX_SRCS := $(shell find caffeine ! -name "test_*.cpp" -name "*.cpp")
-TEST_SRCS := $(shell find caffeine -name "test_*.cpp")
-TEST_SRCS += gtest/gtest-all.cpp
+TEST_SRCS := $(shell find caffeine -name "test_*.cpp") gtest/gtest-all.cpp
 PROTO_SRCS := $(wildcard caffeine/proto/*.proto)
-PROTO_GEN_HEADER := $(PROTO_SRCS:.proto=.pb.h)
-PROTO_GEN_CC := $(PROTO_SRCS:.proto=.pb.cc)
-CXX_OBJS := $(CXX_SRCS:.cpp=.o)
-PROTO_OBJS := $(PROTO_SRCS:.proto=.pb.o)
-OBJS := $(CXX_OBJS) $(PROTO_OBJS)
-TEST_OBJS := $(TEST_SRCS:.cpp=.o)
+PROTO_GEN_HEADER := ${PROTO_SRCS:.proto=.pb.h}
+PROTO_GEN_CC := ${PROTO_SRCS:.proto=.pb.cc}
+CXX_OBJS := ${CXX_SRCS:.cpp=.o}
+PROTO_OBJS := ${PROTO_SRCS:.proto=.pb.o}
+OBJS := $(PROTO_OBJS) $(CXX_OBJS)
+TEST_OBJS := ${TEST_SRCS:.cpp=.o}
 
 CUDA_DIR = /usr/local/cuda
+
 CUDA_INCLUDE_DIR = $(CUDA_DIR)/include
 CUDA_LIB_DIR = $(CUDA_DIR)/lib64
 
-INCLUDE_DIRS := $(CUDA_INCLUDE_DIR) ./
-LIBRARY_DIRS := $(CUDA_LIB_DIR)
-LIBRARIES := cudart cublas cuda protobuf glog
+INCLUDE_DIRS := . $(CUDA_INCLUDE_DIR)
+LIBRARY_DIRS := . $(CUDA_LIB_DIR)
+LIBRARIES := cuda cudart cublas protobuf pthread
 WARNINGS := -Wall
 
-CXXFLAGS += $(foreach includedir,$(INCLUDE_DIRS),-I$(includedir)) -fPIC
+CXXFLAGS += -fPIC $(foreach includedir,$(INCLUDE_DIRS),-I$(includedir))
 LDFLAGS += $(foreach librarydir,$(LIBRARY_DIRS),-L$(librarydir))
 LDFLAGS += $(foreach library,$(LIBRARIES),-l$(library))
 
-#LINK = $(CXX) $(CXXFLAGS) $(LDFLAGS) $(WARNINGS)
+LINK = $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(LDFLAGS) $(WARNINGS)
 
 .PHONY: all test clean distclean
 
@@ -43,12 +40,11 @@ all: $(NAME)
 
 test: $(TEST_NAME)
 
-$(NAME): $(PROTO_GEN_CC) $(OBJS)
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(WARNING) $(OBJS) -shared -o $(NAME)
+$(TEST_NAME): $(TEST_OBJS) $(OBJS)
+	$(CXX) $(TEST_OBJS) $(OBJS) -o $(TEST_NAME) $(LDFLAGS) $(WARNINGS)
 
-$(TEST_NAME):$(TEST_OBJS) $(OBJS)
-	$(CXX) $(TEST_OBJS) $(OBJS) -o $(TEST_NAME) $(LDFALGS) $(WARNING)
-	./$(TEST_NAME)
+$(NAME): $(PROTO_GEN_CC) $(OBJS)
+	$(LINK) -shared $(OBJS) -o $(NAME)
 
 $(PROTO_GEN_CC): $(PROTO_SRCS)
 	protoc $(PROTO_SRCS) --cpp_out=.
@@ -56,9 +52,7 @@ $(PROTO_GEN_CC): $(PROTO_SRCS)
 clean:
 	$(RM) $(NAME)
 	$(RM) $(OBJS)
-	$(RM) $(TEST_OBJS)
-	$(RM) $(TEST_NAME)
 	$(RM) $(PROTO_GEN_HEADER) $(PROTO_GEN_CC)
-
+	$(RM) $(TEST_NAME)
 
 distclean: clean

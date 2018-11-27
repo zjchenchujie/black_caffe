@@ -1,7 +1,7 @@
 #include "cuda_runtime.h"
 #include <cstring>
-#include "caffeine/common.hpp"
-#include "caffeine/syncedmem.hpp"
+#include "common.hpp"
+#include "syncedmem.hpp"
 
 namespace caffeine {
 
@@ -17,7 +17,7 @@ SyncedMemory::~SyncedMemory() {
 
 inline void SyncedMemory::to_cpu(){
     switch (head_){
-        case UNINITIATED:
+        case UNINITIALIZED:
             CUDA_CHECK(cudaMallocHost(&cpu_ptr_, size_));
             memset(cpu_ptr_, 0, size_);
             head_ = HEAD_AT_CPU;
@@ -37,7 +37,7 @@ inline void SyncedMemory::to_cpu(){
 
 inline void SyncedMemory::to_gpu(){
     switch (head_){
-        case UNINITIATED:
+        case UNINITIALIZED:
             CUDA_CHECK(cudaMalloc(&gpu_ptr_, size_));
             CUDA_CHECK(cudaMemset(gpu_ptr_, 0, size_));
             head_ = HEAD_AT_GPU;

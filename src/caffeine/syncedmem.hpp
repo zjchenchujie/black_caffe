@@ -20,7 +20,7 @@ public:
     const void* gpu_data();
     void* mutable_cpu_data();
     void* mutable_gpu_data();
-    enum SyncedHead { UNINITIATED, HEAD_AT_CPU, HEAD_AT_GPU, SYNCED };
+    enum SyncedHead { UNINITIALIZED, HEAD_AT_CPU, HEAD_AT_GPU, SYNCED };
     SyncedHead head(){ return head_;}
 private:
     void to_cpu();

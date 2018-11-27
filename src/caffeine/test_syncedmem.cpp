@@ -1,7 +1,3 @@
-//
-// Created by chujie on 18-11-23.
-//
-
 #include "gtest/gtest.h"
 #include "caffeine/syncedmem.hpp"
 
@@ -19,6 +15,7 @@ TEST_F(SyncedMemoryTest, TestAllocation){
     EXPECT_NE(mem.cpu_data(), (void*)NULL);
     EXPECT_NE(mem.gpu_data(), (void*)NULL);
 }
+
 }
 
 int main(int argc, char** argv){
