@@ -25,10 +25,10 @@ CUDA_LIB_DIR = $(CUDA_DIR)/lib64
 
 INCLUDE_DIRS := . $(CUDA_INCLUDE_DIR)
 LIBRARY_DIRS := . $(CUDA_LIB_DIR)
-LIBRARIES := cuda cudart cublas protobuf pthread
+LIBRARIES := cuda cudart cublas protobuf pthread glog
 WARNINGS := -Wall
 
-CXXFLAGS += -fPIC $(foreach includedir,$(INCLUDE_DIRS),-I$(includedir))
+CXXFLAGS += -fPIC -g $(foreach includedir,$(INCLUDE_DIRS),-I$(includedir))
 LDFLAGS += $(foreach librarydir,$(LIBRARY_DIRS),-L$(librarydir))
 LDFLAGS += $(foreach library,$(LIBRARIES),-l$(library))
 
@@ -42,6 +42,7 @@ test: $(TEST_NAME)
 
 $(TEST_NAME): $(TEST_OBJS) $(OBJS)
 	$(CXX) $(TEST_OBJS) $(OBJS) -o $(TEST_NAME) $(LDFLAGS) $(WARNINGS)
+	./$(TEST_NAME)
 
 $(NAME): $(PROTO_GEN_CC) $(OBJS)
 	$(LINK) -shared $(OBJS) -o $(NAME)
@@ -50,9 +51,8 @@ $(PROTO_GEN_CC): $(PROTO_SRCS)
 	protoc $(PROTO_SRCS) --cpp_out=.
 
 clean:
-	$(RM) $(NAME)
-	$(RM) $(OBJS)
+	$(RM) $(NAME) $(TEST_NAME)
+	$(RM) $(OBJS) $(TEST_OBJS)
 	$(RM) $(PROTO_GEN_HEADER) $(PROTO_GEN_CC)
-	$(RM) $(TEST_NAME)
 
 distclean: clean

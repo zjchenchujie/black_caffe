@@ -7,7 +7,7 @@ class SyncedMemoryTest: public ::testing::Test {};
 
 TEST_F(SyncedMemoryTest, TestInitialization){
     SyncedMemory mem(10);
-    EXPECT_EQ(mem.head(), SyncedMemory::UNINITIATED);
+    EXPECT_EQ(mem.head(), SyncedMemory::UNINITIALIZED);
 }
 
 TEST_F(SyncedMemoryTest, TestAllocation){
