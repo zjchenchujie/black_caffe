@@ -15,3 +15,7 @@
 # debug directory
 cmake-build-debug/
 .idea/
+
+# Compiled protocol buffers
+*.pb.h
+*.pb.cc

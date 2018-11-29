@@ -40,7 +40,7 @@ all: $(NAME)
 
 test: $(TEST_NAME)
 
-$(TEST_NAME): $(TEST_OBJS) $(OBJS)
+$(TEST_NAME): $(OBJS) $(TEST_OBJS)
 	$(CXX) $(TEST_OBJS) $(OBJS) -o $(TEST_NAME) $(LDFLAGS) $(WARNINGS)
 	./$(TEST_NAME)
 
