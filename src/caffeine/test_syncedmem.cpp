@@ -42,11 +42,8 @@ TEST_F(SyncedMemoryTest, TestGPUWrite){
     for(int i=0; i<mem.size(); i++){
         EXPECT_EQ(((char*)cpu_data)[i], 1);
     }
+    EXPECT_EQ(SyncedMemory::SYNCED, mem.head());
 }
 
 }
 
-int main(int argc, char** argv){
-    ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
-}

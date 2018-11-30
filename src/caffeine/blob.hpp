@@ -16,17 +16,22 @@ template <typename Dtype>
 class Blob{
 public:
     Blob()
-        :num_(0), channels_(0), height_(0), width_(0), count_(0), data_(), diff_(){};
-    explicit Blob(const int num, const int channels, const int height, const int width){
-        Reshape(num, channels, height, width);
-    };
+        :num_(0), channels_(0), height_(0), width_(0), count_(0), data_(), diff_() {};
+    explicit Blob(const int num, const int channels, const int height, const int width)
+    :num_(num), channels_(channels), height_(height), width_(width), count_(num * channels * height * width),
+    data_(new SyncedMemory(count_ * sizeof(Dtype))),
+    diff_(new SyncedMemory(count_ * sizeof(Dtype))) {};
 
-    ~Blob(){};
+    ~Blob(){
+//        delete data_;
+//        delete diff_;
+    };
     void Reshape(const int num, const int channels, const int height, const int width);
-    inline int num(){ return num_;}
-    inline int channels(){ return channels_;}
-    inline int height(){ return height_;}
-    inline int width(){ return width_;}
+    inline int num(){ return num_; }
+    inline int channels(){ return channels_; }
+    inline int height(){ return height_; }
+    inline int width(){ return width_; }
+    inline int count(){ return count_; }
 
     const Dtype* cpu_data();
     const Dtype* gpu_data();
@@ -38,8 +43,6 @@ public:
     Dtype* mutable_gpu_diff();
 
 private:
-    void check_data();
-    void check_diff();
     shared_ptr<SyncedMemory> data_;
     shared_ptr<SyncedMemory> diff_;
     int num_;
