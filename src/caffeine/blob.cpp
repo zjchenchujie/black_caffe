@@ -15,9 +15,17 @@ void Blob<Dtype>::Reshape(const int num,  const int channels, const int height, 
     channels_ = channels;
     height_ = height;
     width_ = width;
+    CHECK_GT(num, 0);
+    CHECK_GT(channels, 0);
+    CHECK_GT(height, 0);
+    CHECK_GT(width, 0);
     count_ = num_* channels_ * height_ * width_;
     data_.reset(new SyncedMemory(count_ * sizeof(Dtype)));
     diff_.reset(new SyncedMemory(count_ * sizeof(Dtype)));
+}
+template <typename Dtype>
+Blob<Dtype>::Blob(const int num, const int channels, const int height, const int width){
+    Reshape(num, channels, height, width);
 }
 
 template <typename Dtype>

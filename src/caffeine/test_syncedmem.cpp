@@ -12,12 +12,17 @@ class SyncedMemoryTest: public ::testing::Test {};
 TEST_F(SyncedMemoryTest, TestInitialization){
     SyncedMemory mem(10);
     EXPECT_EQ(mem.head(), SyncedMemory::UNINITIALIZED);
+    EXPECT_EQ(10, mem.size());
+    SyncedMemory *p_mem = new SyncedMemory(10 * sizeof(float));
+    EXPECT_EQ(10 * sizeof(float), p_mem->size());
 }
 
 TEST_F(SyncedMemoryTest, TestAllocation){
     SyncedMemory mem(10);
-    EXPECT_NE(mem.cpu_data(), (void*)NULL);
-    EXPECT_NE(mem.gpu_data(), (void*)NULL);
+    EXPECT_TRUE(mem.cpu_data());
+    EXPECT_TRUE(mem.gpu_data());
+    EXPECT_TRUE(mem.mutable_gpu_data());
+    EXPECT_TRUE(mem.mutable_cpu_data());
 }
 
 TEST_F(SyncedMemoryTest, TestCPUWrite){

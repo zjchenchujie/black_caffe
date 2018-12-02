@@ -16,6 +16,17 @@ protected:
 
 typedef ::testing::Types<float, double> Dtypes;
 TYPED_TEST_CASE(BlobSimpleTest, Dtypes);
+TYPED_TEST(BlobSimpleTest, TestPointer){
+//    EXPECT_TRUE(this->blob_->cpu_data());
+//    EXPECT_TRUE(this->blob_->gpu_data() == NULL);
+//    EXPECT_TRUE(this->blob_->mutable_cpu_data() == NULL);
+//    EXPECT_TRUE(this->blob_->mutable_gpu_data() == NULL);
+    EXPECT_TRUE(this->blob_preshaped_->cpu_data());
+    EXPECT_TRUE(this->blob_preshaped_->gpu_data());
+    EXPECT_TRUE(this->blob_preshaped_->mutable_cpu_data());
+    EXPECT_TRUE(this->blob_preshaped_->mutable_gpu_data());
+
+}
 TYPED_TEST(BlobSimpleTest, TestInitialization){
     EXPECT_TRUE(this->blob_);
     EXPECT_TRUE(this->blob_preshaped_);
