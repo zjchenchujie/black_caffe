@@ -76,6 +76,47 @@ Dtype* Blob<Dtype>::mutable_gpu_diff(){
     return (Dtype*)diff_->mutable_gpu_data();
 }
 
+template <typename Dtype>
+void Blob<Dtype>::Update() {
+    //not implemented yet
+    LOG(FATAL) << "Update function not implemented yet.";
+}
+
+template <typename Dtype>
+void Blob<Dtype>::FromPorto(const caffeine::BlobProto &proto) {
+    Reshape(proto.num(), proto.channels(), proto.height(), proto.width());
+    // copy data
+    Dtype* data_vec = mutable_cpu_data();
+    for(int i=0; i<count_; i++){
+        data_vec[i] = proto.data(i);
+    }
+
+    Dtype* diff_vec = mutable_cpu_diff();
+    for(int i=0; i<count_; i++){
+        diff_vec[i] = proto.diff(i);
+    }
+}
+
+template <typename Dtype>
+void Blob<Dtype>::ToProto(caffeine::BlobProto *proto) {
+    proto->set_num(num_);
+    proto->set_channels(channels_);
+    proto->set_height(height_);
+    proto->set_width(width_);
+    proto->clear_data();
+    proto->clear_diff();
+
+    const Dtype* data_vec = cpu_data();
+    for(int i=0; i<count_; i++){
+        proto->add_data(data_vec[i]);
+    }
+
+    const Dtype* diff_vec = cpu_diff();
+    for(int i=0; i<count_; i++){
+        proto->add_diff(diff_vec[i]);
+    }
+}
+
 template class Blob<float>;
 template class Blob<double>;
 

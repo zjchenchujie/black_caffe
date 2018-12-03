@@ -5,7 +5,7 @@
 #ifndef BLACK_CAFFE_NEURON_LAYER_HPP
 #define BLACK_CAFFE_NEURON_LAYER_HPP
 
-#include "caffeine/base.hpp"
+#include "caffeine/layer.hpp"
 
 namespace caffeine{
 

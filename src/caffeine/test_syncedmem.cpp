@@ -36,6 +36,15 @@ TEST_F(SyncedMemoryTest, TestCPUWrite){
     }
     const void *gpu_data = mem.gpu_data();
     EXPECT_EQ(SyncedMemory::SYNCED, mem.head());
+
+    char* recovered_data = new char[10];
+    memset((void*)recovered_data, 0, 10);
+    CUDA_CHECK(cudaMemcpy((void*)recovered_data, gpu_data, 10, cudaMemcpyDeviceToHost));
+    for(int i=0; i<mem.size(); i++){
+        EXPECT_EQ(1, ((char*)recovered_data)[i]);
+    }
+
+    delete[] recovered_data;
 }
 
 TEST_F(SyncedMemoryTest, TestGPUWrite){

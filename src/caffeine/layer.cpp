@@ -2,7 +2,7 @@
 // Created by chujie on 12/2/18.
 //
 
-#include "caffeine/base.hpp"
+#include "caffeine/layer.hpp"
 
 namespace caffeine{
     template <typename Dtype>

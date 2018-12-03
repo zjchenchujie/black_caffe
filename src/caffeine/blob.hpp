@@ -9,6 +9,7 @@
 #include <memory>
 #include "caffeine/common.hpp"
 #include "caffeine/syncedmem.hpp"
+#include "caffeine/proto/layer_param.pb.h"
 
 namespace caffeine {
 
@@ -38,6 +39,10 @@ public:
     Dtype* mutable_gpu_data();
     Dtype* mutable_cpu_diff();
     Dtype* mutable_gpu_diff();
+
+    void Update();
+    void FromPorto(const BlobProto& proto);
+    void ToProto(BlobProto* proto);
 
 private:
     shared_ptr<SyncedMemory> data_;

@@ -22,7 +22,7 @@ public:
     static cublasHandle_t cublas_handle();
     static Brew mode();
 
-    static Brew set_mode(Brew mode);
+    static void set_mode(Brew mode);
 
 private:
     Caffeine();

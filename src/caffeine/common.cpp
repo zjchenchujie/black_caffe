@@ -34,7 +34,7 @@ namespace caffeine{
         return Get().cublas_handle_;
     }
 
-    Caffeine::Brew Caffeine::set_mode(Caffeine::Brew mode) {
+    void Caffeine::set_mode(Caffeine::Brew mode) {
         Get().mode_ = mode;
     }
 
