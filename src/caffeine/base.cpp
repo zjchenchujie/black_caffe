@@ -15,7 +15,7 @@ namespace caffeine{
                 Forward_gpu(bottom, top);
                 break;
             default:
-                CHECK(false);
+                LOG(FATAL) << "Unkonwn caffeine mode";
         }
     };
 
@@ -29,7 +29,7 @@ namespace caffeine{
                 Backward_gpu(bottom, top);
                 break;
             default:
-                CHECK(false);
+                LOG(FATAL) << "Unknown caffeine mode";
         }
     };
 
@@ -44,7 +44,7 @@ namespace caffeine{
                 Predict_gpu(bottom, top);
                 break;
             default:
-                CHECK(false);
+                LOG(FATAL) << "Unknown caffeine mode";
         }
     };
 
