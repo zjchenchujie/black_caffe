@@ -17,6 +17,10 @@ TEST_F(TestCommon, TestCublasHandler){
     EXPECT_TRUE(Caffeine::cublas_handle());
 }
 
+TEST_F(TestCommon, TestVslStream) {
+        EXPECT_TRUE(Caffeine::vsl_stream());
+    }
+
 TEST_F(TestCommon, TestBresMode){
     EXPECT_EQ(Caffeine::CPU, Caffeine::mode());
     Caffeine::set_mode(Caffeine::GPU);

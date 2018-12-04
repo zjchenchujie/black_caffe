@@ -11,11 +11,15 @@ namespace caffeine{
     Caffeine::Caffeine()
     :mode_(Caffeine::CPU){
         CUBLAS_CHECK(cublasCreate(&cublas_handle_));
+        VSL_CHECK(vslNewStream(&vsl_stream_, VSL_BRNG_MT19937, 1701));
     }
 
     Caffeine::~Caffeine() {
         if(!cublas_handle_){
            CUBLAS_CHECK(cublasDestroy(cublas_handle_));
+        }
+        if(!vsl_stream_){
+            VSL_CHECK(vslDeleteStream(&vsl_stream_));
         }
     }
 
@@ -32,6 +36,10 @@ namespace caffeine{
 
     cublasHandle_t Caffeine::cublas_handle() {
         return Get().cublas_handle_;
+    }
+
+    VSLStreamStatePtr Caffeine::vsl_stream() {
+        return Get().vsl_stream_;
     }
 
     void Caffeine::set_mode(Caffeine::Brew mode) {

@@ -19,13 +19,16 @@ OBJS := $(PROTO_OBJS) $(CXX_OBJS)
 TEST_OBJS := ${TEST_SRCS:.cpp=.o}
 
 CUDA_DIR = /usr/local/cuda
+MKL_DIR = /opt/intel/mkl
 
 CUDA_INCLUDE_DIR = $(CUDA_DIR)/include
 CUDA_LIB_DIR = $(CUDA_DIR)/lib64
+MKL_INCLUDE_DIR = $(MKL_DIR)/include
+MKL_LIB_DIR = $(MKL_DIR)/lib/intel64_lin
 
-INCLUDE_DIRS := . $(CUDA_INCLUDE_DIR)
-LIBRARY_DIRS := . $(CUDA_LIB_DIR)
-LIBRARIES := cuda cudart cublas protobuf pthread glog
+INCLUDE_DIRS := . $(CUDA_INCLUDE_DIR) $(MKL_INCLUDE_DIR)
+LIBRARY_DIRS := . $(CUDA_LIB_DIR) $(MKL_LIB_DIR)
+LIBRARIES := cuda cudart cublas protobuf pthread glog mkl_rt mkl_intel_thread
 WARNINGS := -Wall
 
 CXXFLAGS += -fPIC -g $(foreach includedir,$(INCLUDE_DIRS),-I$(includedir))
@@ -48,7 +51,7 @@ $(NAME): $(PROTO_GEN_CC) $(OBJS)
 	$(LINK) -shared $(OBJS) -o $(NAME)
 
 $(PROTO_GEN_CC): $(PROTO_SRCS)
-	protoc $(PROTO_SRCS) --cpp_out=.
+	protoc $(PROTO_SRCS) --cpp_out=. --python_out=.
 
 clean:
 	$(RM) $(NAME) $(TEST_NAME)
