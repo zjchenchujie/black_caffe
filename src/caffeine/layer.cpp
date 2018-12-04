@@ -36,19 +36,6 @@ namespace caffeine {
         }
     };
 
-    template <typename Dtype>
-    inline void Layer<Dtype>::Predict(const vector<Blob<Dtype>*>& bottom,
-                                      vector<Blob<Dtype>*>* top) {
-        switch(Caffeine::mode()) {
-            case Caffeine::CPU:
-                Predict_cpu(bottom, top);
-                break;
-            case Caffeine::GPU:
-                Predict_gpu(bottom, top);
-                break;
-            default:
-                LOG(FATAL) << "Unknown caffeine mode.";
-        }
-    };
-
+    template class Layer<float>;
+    template class Layer<double>;
 }  // namespace caffeine

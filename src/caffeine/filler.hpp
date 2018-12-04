@@ -8,11 +8,12 @@
 #include <mkl.h>
 #include "caffeine/common.hpp"
 #include "caffeine/proto/layer_param.pb.h"
+#include "caffeine/blob.hpp"
 
 namespace caffeine{
 
 template <typename Dtype>
-class Filler<Dtype>{
+class Filler {
 public:
     Filler(const FillerParameter& param)
     :filler_param_(param){};
@@ -25,7 +26,7 @@ protected:
 template <typename Dtype>
 class ConstantFiller : public Filler<Dtype>{
 public:
-    ConstantFiller(const FillerParamter& param)
+    ConstantFiller(const FillerParameter& param)
     :Filler<Dtype>(param){};
     virtual void Fill(Blob<Dtype>* blob){
         Dtype* data = blob->mutable_cpu_data();
@@ -48,17 +49,18 @@ public:
         const int count = blob->count();
         const Dtype value = this->filler_param_.value();
         CHECK(count);
-        switch(sizeof(Dtype)){
+        switch(sizeof(Dtype)) {
             case sizeof(float):
                 VSL_CHECK(vsRngUniform(VSL_RNG_METHOD_UNIFORM_STD, Caffeine::vsl_stream(),
-                        count, (float*)data, this->filler_param_.min(), this->filler_param_.max()));
+                                       count, (float*)data, this->filler_param_.min(),
+                                       this->filler_param_.max()));
                 break;
             case sizeof(double):
-                VSL_CHECK(vsRngUniform(VSL_RNG_METHOD_UNIFORM_STD, Caffeine::vsl_stream(),
-                        count, (double*)data, this->filler_param_.min(), this->filler_param_.max()));
+                VSL_CHECK(vdRngUniform(VSL_RNG_METHOD_UNIFORM_STD, Caffeine::vsl_stream(),
+                                       count, (double*)data, this->filler_param_.min(), this->filler_param_.max()));
                 break;
             default:
-                CHECK(false) << "Unknown dtype";
+                CHECK(false) << "Unknown dtype. ";
         }
     }
 }; // class UniformFiller
@@ -75,15 +77,17 @@ public:
         CHECK(count);
         switch(sizeof(Dtype)){
             case sizeof(float):
-                VSL_CHECK(vsRngGaussian(VSL_RNG_METHOD_GAUSSIAN_BOXMULLER, Caffeine::vsl_stream(),
-                        count, (float*)data, this->filler_param_.mean(), this->filler_param_.std()));
+                VSL_CHECK(vsRngGaussian(VSL_RNG_METHOD_GAUSSIAN_BOXMULLER,
+                                        Caffeine::vsl_stream(), count, (float*)data,
+                                        this->filler_param_.mean(), this->filler_param_.std()));
                 break;
             case sizeof(double):
-                VSL_CHECK(vsRngGaussian(VSL_RNG_METHOD_GAUSSIAN_BOXMULLER, Caffeine::vsl_stream(),
-                        count, (double*)data, this->filler_param_.mean(), this->filler_param_.std()));
+                VSL_CHECK(vdRngGaussian(VSL_RNG_METHOD_GAUSSIAN_BOXMULLER,
+                                        Caffeine::vsl_stream(), count, (double*)data,
+                                        this->filler_param_.mean(), this->filler_param_.std()));
                 break;
             default:
-                CHECK(false) << "Unknown dtype";
+                CHECK(false) << "Unknown dtype.";
         } //switch
     } // func Fill
 }; // class GaussianFiller

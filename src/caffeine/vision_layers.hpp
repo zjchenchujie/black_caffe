@@ -11,11 +11,16 @@ namespace caffeine{
     template <typename Dtype>
     class NeuronLayer : public Layer<Dtype>{
     public:
+        explicit NeuronLayer(const LayerParameter& param)
+        : Layer<Dtype>(param) {};
         virtual void SetUp(const std::vector<Blob<Dtype>*>& bottom, std::vector<Blob<Dtype>*>* top);
     };
 
     template <typename Dtype>
     class ReLULayer : public NeuronLayer<Dtype>{
+    public:
+        explicit ReLULayer(const LayerParameter& param)
+                : NeuronLayer<Dtype>(param) {};
     protected:
         virtual void Forward_cpu(const std::vector<Blob<Dtype>* >& bottom, std::vector<Blob<Dtype>* >* top);
         virtual void Forward_gpu(const std::vector<Blob<Dtype>* >& bottom, std::vector<Blob<Dtype>* >* top);

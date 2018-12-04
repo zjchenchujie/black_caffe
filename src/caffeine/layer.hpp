@@ -18,12 +18,12 @@ namespace caffeine {
         // layer.
         explicit Layer(const LayerParameter& param)
                 : layer_param_(param) {};
-        virtual ~Layer();
+        virtual ~Layer(){};
         // SetUp: your function should implement this.
-        virtual void SetUp(std::vector<const Blob<Dtype>*>& bottom,
+        virtual void SetUp(const std::vector<Blob<Dtype>*>& bottom,
                            std::vector<Blob<Dtype>*>* top) = 0;
 
-        // Forward, backward and predict wrappers. You should implement the cpu and
+        // Forward, backward wrappers. You should implement the cpu and
         // gpu specific implementations instead, and should not change these
         // functions.
         inline void Forward(const std::vector<Blob<Dtype>*>& bottom,
@@ -63,16 +63,6 @@ namespace caffeine {
             return Backward_cpu(top, propagate_down, bottom);
         };
 
-        // Prediction functions: could be overridden, but the default behavior is to
-        // simply call the forward functions.
-        virtual void Predict_cpu(const std::vector<Blob<Dtype>*>& bottom,
-                                 std::vector<Blob<Dtype>*>* top) { Forward_cpu(bottom, top); };
-        // For prediction, if there is no Predict_gpu, then there are two options:
-        // to use predict_cpu as a backup, or to use forward_gpu (e.g. maybe the
-        // author forgot to write what backup s/he wants?). Thus, we will require
-        // the author to explicitly specify which fallback s/he wants.
-        virtual void Predict_gpu(const std::vector<Blob<Dtype>*>& bottom,
-                                 std::vector<Blob<Dtype>*>* top) = 0;
     };  // class Layer
 
 }  // namespace caffeine

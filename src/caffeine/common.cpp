@@ -9,7 +9,7 @@ namespace caffeine{
 
     shared_ptr<Caffeine> Caffeine::singleton_;
     Caffeine::Caffeine()
-    :mode_(Caffeine::CPU){
+    :mode_(Caffeine::CPU), phase_(Caffeine::TRAIN){
         CUBLAS_CHECK(cublasCreate(&cublas_handle_));
         VSL_CHECK(vslNewStream(&vsl_stream_, VSL_BRNG_MT19937, 1701));
     }
@@ -34,6 +34,10 @@ namespace caffeine{
         return Get().mode_;
     }
 
+    Caffeine::Phase Caffeine::phase() {
+        return Get().phase_;
+    }
+
     cublasHandle_t Caffeine::cublas_handle() {
         return Get().cublas_handle_;
     }
@@ -44,6 +48,10 @@ namespace caffeine{
 
     void Caffeine::set_mode(Caffeine::Brew mode) {
         Get().mode_ = mode;
+    }
+
+    void Caffeine::set_phase(Caffeine::Phase phase) {
+        Get().phase_ = phase;
     }
 
 
