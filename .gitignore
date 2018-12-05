@@ -19,3 +19,6 @@ cmake-build-debug/
 # Compiled protocol buffers
 *.pb.h
 *.pb.cc
+*pb2.py
+*pb2.pyc
+#

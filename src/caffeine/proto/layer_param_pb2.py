@@ -18,7 +18,7 @@ _sym_db = _symbol_database.Default()
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='caffeine/proto/layer_param.proto',
   package='caffeine',
-  serialized_pb=_b('\n caffeine/proto/layer_param.proto\x12\x08\x63\x61\x66\x66\x65ine\",\n\x0eLayerParameter\x12\x0c\n\x04name\x18\x01 \x02(\t\x12\x0c\n\x04type\x18\x02 \x02(\t\"c\n\x0f\x46illerParameter\x12\x0c\n\x04type\x18\x01 \x02(\t\x12\r\n\x05value\x18\x02 \x01(\x02\x12\x0b\n\x03min\x18\x03 \x01(\x02\x12\x0b\n\x03max\x18\x04 \x01(\x02\x12\x0c\n\x04mean\x18\x05 \x01(\x02\x12\x0b\n\x03std\x18\x06 \x01(\x02\"q\n\tBlobProto\x12\x0e\n\x03num\x18\x01 \x01(\x05:\x01\x30\x12\x13\n\x08\x63hannels\x18\x02 \x01(\x05:\x01\x30\x12\x11\n\x06height\x18\x03 \x01(\x05:\x01\x30\x12\x10\n\x05width\x18\x04 \x01(\x05:\x01\x30\x12\x0c\n\x04\x64\x61ta\x18\x05 \x03(\x02\x12\x0c\n\x04\x64iff\x18\x06 \x03(\x02')
+  serialized_pb=_b('\n caffeine/proto/layer_param.proto\x12\x08\x63\x61\x66\x66\x65ine\",\n\x0eLayerParameter\x12\x0c\n\x04name\x18\x01 \x02(\t\x12\x0c\n\x04type\x18\x02 \x02(\t\"r\n\x0f\x46illerParameter\x12\x0c\n\x04type\x18\x01 \x02(\t\x12\x10\n\x05value\x18\x02 \x01(\x02:\x01\x30\x12\x0e\n\x03min\x18\x03 \x01(\x02:\x01\x30\x12\x0e\n\x03max\x18\x04 \x01(\x02:\x01\x31\x12\x0f\n\x04mean\x18\x05 \x01(\x02:\x01\x30\x12\x0e\n\x03std\x18\x06 \x01(\x02:\x01\x31\"q\n\tBlobProto\x12\x0e\n\x03num\x18\x01 \x01(\x05:\x01\x30\x12\x13\n\x08\x63hannels\x18\x02 \x01(\x05:\x01\x30\x12\x11\n\x06height\x18\x03 \x01(\x05:\x01\x30\x12\x10\n\x05width\x18\x04 \x01(\x05:\x01\x30\x12\x0c\n\x04\x64\x61ta\x18\x05 \x03(\x02\x12\x0c\n\x04\x64iff\x18\x06 \x03(\x02')
 )
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
@@ -79,35 +79,35 @@ _FILLERPARAMETER = _descriptor.Descriptor(
     _descriptor.FieldDescriptor(
       name='value', full_name='caffeine.FillerParameter.value', index=1,
       number=2, type=2, cpp_type=6, label=1,
-      has_default_value=False, default_value=0,
+      has_default_value=True, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
       name='min', full_name='caffeine.FillerParameter.min', index=2,
       number=3, type=2, cpp_type=6, label=1,
-      has_default_value=False, default_value=0,
+      has_default_value=True, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
       name='max', full_name='caffeine.FillerParameter.max', index=3,
       number=4, type=2, cpp_type=6, label=1,
-      has_default_value=False, default_value=0,
+      has_default_value=True, default_value=1,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
       name='mean', full_name='caffeine.FillerParameter.mean', index=4,
       number=5, type=2, cpp_type=6, label=1,
-      has_default_value=False, default_value=0,
+      has_default_value=True, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
       name='std', full_name='caffeine.FillerParameter.std', index=5,
       number=6, type=2, cpp_type=6, label=1,
-      has_default_value=False, default_value=0,
+      has_default_value=True, default_value=1,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
@@ -123,7 +123,7 @@ _FILLERPARAMETER = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=92,
-  serialized_end=191,
+  serialized_end=206,
 )
 
 
@@ -187,8 +187,8 @@ _BLOBPROTO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=193,
-  serialized_end=306,
+  serialized_start=208,
+  serialized_end=321,
 )
 
 DESCRIPTOR.message_types_by_name['LayerParameter'] = _LAYERPARAMETER

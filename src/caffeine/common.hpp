@@ -16,7 +16,7 @@
 namespace caffeine {
 using boost::shared_ptr;
 
-const int CAFFEINE_CUDA_NUM_TTHREADS = 512;
+const int CAFFEINE_CUDA_NUM_THREADS = 512;
 
 class Caffeine{
 public:

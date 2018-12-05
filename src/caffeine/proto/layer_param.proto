@@ -7,11 +7,11 @@ message LayerParameter{
 
 message FillerParameter{
     required string type = 1;
-    optional float value = 2; // the value in constant filler
-    optional float min = 3; // uni min
-    optional float max = 4; //uni max
-    optional float mean = 5; // gaussian mean
-    optional float std = 6; //gaussian standard
+    optional float value = 2 [default = 0]; // the value in constant filler
+    optional float min = 3 [default = 0]; // uni min
+    optional float max = 4 [default = 1]; //uni max
+    optional float mean = 5 [default = 0]; // gaussian mean
+    optional float std = 6 [default = 1]; //gaussian standard
 }
 
 message BlobProto{

@@ -29,8 +29,8 @@ namespace caffeine{
         virtual Dtype Backward_gpu(const std::vector<Blob<Dtype>*>& top, const bool propagate_down, std::vector<Blob<Dtype>*>* bottom);
 
 
-        virtual void Predict_cpu(const std::vector<Blob<Dtype>* >& bottom, std::vector<Blob<Dtype>* >* top);
-        virtual void Predict_gpu(const std::vector<Blob<Dtype>* >& bottom, std::vector<Blob<Dtype>* >* top);
+//        virtual void Predict_cpu(const std::vector<Blob<Dtype>* >& bottom, std::vector<Blob<Dtype>* >* top);
+//        virtual void Predict_gpu(const std::vector<Blob<Dtype>* >& bottom, std::vector<Blob<Dtype>* >* top);
     };
 } //namespace caffeine
 

@@ -26,13 +26,11 @@ namespace caffeine {
         // Forward, backward wrappers. You should implement the cpu and
         // gpu specific implementations instead, and should not change these
         // functions.
-        inline void Forward(const std::vector<Blob<Dtype>*>& bottom,
-                            std::vector<Blob<Dtype>*>* top);
+        inline void Forward(const vector<Blob<Dtype>*>& bottom,
+                            vector<Blob<Dtype>*>* top);
         inline Dtype Backward(const std::vector<Blob<Dtype>*>& top,
                               const bool propagate_down,
                               std::vector<Blob<Dtype>*>* bottom);
-        inline void Predict(const std::vector<Blob<Dtype>*>& bottom,
-                            std::vector<Blob<Dtype>*>* top);
 
     protected:
         // The protobuf that stores the layer parameters

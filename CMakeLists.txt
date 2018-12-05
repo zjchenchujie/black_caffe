@@ -10,11 +10,13 @@ set(GLOG_LIB /usr/lib/x86_64-linux-gnu)
 include_directories(src)
 include_directories(${CUDA_DIR}/include)
 include_directories(src/gtest)
+include_directories(/usr/local/include)
+include_directories(/opt/intel/mkl/include)
 
 aux_source_directory(src/caffeine SRC_LIST)
 #aux_source_directory(src/gtest GTEST_SRCS)
 set(GTEST_SRCS src/gtest/gtest-all.cpp)
-set(TEST_SRC_LIST src/caffeine/test_syncedmem.cpp)
+set(TEST_SRC_LIST src/caffeine/test_syncedmem.cpp src/caffeine/test_blob.cpp src/caffeine/test_caffeine.cpp src/caffeine/common.cpp src/caffeine/layer.cpp src/caffeine/test_common.cpp src/caffeine/neuro_layer.hpp src/caffeine/filler.hpp src/caffeine/vision_layers.hpp src/caffeine/test/test_filler.cpp src/caffeine/test/test_neuron.cpp)
 
 message(STATUS "SORUCE LIST: " ${SRC_LIST})
 
