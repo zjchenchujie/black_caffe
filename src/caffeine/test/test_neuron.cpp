@@ -43,6 +43,7 @@ TYPED_TEST_CASE(NeuronLayerTest, Dtypes);
 
 TYPED_TEST(NeuronLayerTest, TestReLU){
     LayerParameter layer_param;
+    Caffeine::set_mode(Caffeine::CPU);
     ReLULayer<TypeParam> layer(layer_param);
     layer.Forward(this->blob_bottom_vec_, &(this->blob_top_vec_)); //TODO const
 
@@ -54,6 +55,21 @@ TYPED_TEST(NeuronLayerTest, TestReLU){
         EXPECT_TRUE(top_data[i] == 0 || bottom_data[i] == top_data[i]);
     }
 
+}
+
+TYPED_TEST(NeuronLayerTest, TestReLUGPU){
+    LayerParameter layer_param;
+    Caffeine::set_mode(Caffeine::GPU);
+    ReLULayer<TypeParam> layer(layer_param);
+    layer.Forward(this->blob_bottom_vec_, &(this->blob_top_vec_));
+
+    const TypeParam* bottom_data = (this->blob_bottom_vec_[0])->cpu_data();
+    const TypeParam* top_data = (this->blob_top_vec_[0])->cpu_data();
+    const int count = this->blob_bottom_vec_[0]->count();
+    for(int i=0; i<count; ++i){
+        EXPECT_GE(top_data[i], 0.);
+        EXPECT_TRUE(top_data[i] == bottom_data[i] || top_data[i] == 0);
+    }
 }
 
 } // namespace caffeine
