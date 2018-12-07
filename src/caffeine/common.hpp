@@ -7,16 +7,23 @@
 #include <glog/logging.h>
 #include <cublas_v2.h>
 #include <mkl_vsl.h>
+#include <cuda.h>
+#include <curand.h>
 #include "driver_types.h"
 
 #define CUDA_CHECK(condition)       CHECK_EQ((condition), cudaSuccess)
 #define CUBLAS_CHECK(condition)     CHECK_EQ((condition), CUBLAS_STATUS_SUCCESS)
+#define CURAND_CHECK(condition)     CHECK_EQ((condition), CURAND_STATUS_SUCCESS)
 #define VSL_CHECK(condition)        CHECK_EQ((condition), VSL_STATUS_OK)
 
 namespace caffeine {
 using boost::shared_ptr;
 
 const int CAFFEINE_CUDA_NUM_THREADS = 512;
+
+inline int CAFFEINE_GET_BLOCKS(const int N){
+    return (N + CAFFEINE_CUDA_NUM_THREADS -1) / CAFFEINE_CUDA_NUM_THREADS;
+}
 
 class Caffeine{
 public:
@@ -25,6 +32,7 @@ public:
     enum Brew {CPU, GPU};
     enum Phase {TRAIN, TEST};
     static cublasHandle_t cublas_handle();
+    static curandGenerator_t curand_generator();
     static VSLStreamStatePtr vsl_stream();
     static Brew mode();
     static Phase phase();
@@ -36,6 +44,7 @@ private:
     Caffeine();
     static shared_ptr<Caffeine> singleton_;
     cublasHandle_t cublas_handle_;
+    curandGenerator_t curand_generator_;
     VSLStreamStatePtr vsl_stream_;
     Brew mode_;
     Phase phase_;

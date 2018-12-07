@@ -5,15 +5,6 @@
 using std::max;
 
 namespace caffeine{
-template <typename Dtype>
-void NeuronLayer<Dtype>::SetUp(const vector<Blob<Dtype>* >& bottom, vector<Blob<Dtype>* >* top){
-    CHECK_EQ(bottom.size(), 1) << "Neuron Layer takes a single blob as input.";
-    CHECK_EQ(top->size(), 1) << "Neuron Layer takes a single blob as output.";
-    (*top)[0]->Reshape(bottom[0]->num(), bottom[0]->channels(), bottom[0]->height(), bottom[0]->width());
-}
-
-template class NeuronLayer<float>;
-template class NeuronLayer<double>;
 
 template <typename Dtype>
 void ReLULayer<Dtype>::Forward_cpu(const vector<Blob<Dtype>* >& bottom, vector<Blob<Dtype>* >* top){
@@ -53,9 +44,9 @@ void ReLULayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
     const Dtype* bottom_data = bottom[0]->gpu_data();
     Dtype* top_data = (*top)[0]->mutable_gpu_data();
     const int count = bottom[0]->count();
-    const int blocks = (count + CAFFEINE_CUDA_NUM_THREADS - 1) /
-                       CAFFEINE_CUDA_NUM_THREADS;
-    ReLUForward<<<blocks, CAFFEINE_CUDA_NUM_THREADS>>>(count, bottom_data,
+//    const int blocks = (count + CAFFEINE_CUDA_NUM_THREADS - 1) /
+//                       CAFFEINE_CUDA_NUM_THREADS;
+    ReLUForward<Dtype><<<CAFFEINE_GET_BLOCKS(count), CAFFEINE_CUDA_NUM_THREADS>>>(count, bottom_data,
             top_data);
 }
 
@@ -77,9 +68,9 @@ void ReLULayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
             const Dtype* top_diff = top[0]->gpu_diff();
             Dtype* bottom_diff = (*bottom)[0]->mutable_gpu_diff();
             const int count = (*bottom)[0]->count();
-            const int blocks = (count + CAFFEINE_CUDA_NUM_THREADS - 1) /
-                               CAFFEINE_CUDA_NUM_THREADS;
-            ReLUBackward<<<blocks, CAFFEINE_CUDA_NUM_THREADS>>>(count, top_diff,
+//            const int blocks = (count + CAFFEINE_CUDA_NUM_THREADS - 1) /
+//                               CAFFEINE_CUDA_NUM_THREADS;
+            ReLUBackward<Dtype><<<CAFFEINE_GET_BLOCKS(count), CAFFEINE_CUDA_NUM_THREADS>>>(count, top_diff,
                     bottom_data, bottom_diff);
         }
         return Dtype(0);
