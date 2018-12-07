@@ -110,7 +110,6 @@ namespace caffeine {
         return Dtype(0);
     }
 
-    template class DropoutLayer<float>;
-    template class DropoutLayer<double>;
+    INSTANTIATE_CLASS(DropoutLayer);
 
 } // namespace caffeine

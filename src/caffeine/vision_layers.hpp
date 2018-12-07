@@ -53,6 +53,27 @@ namespace caffeine{
         float scale_;
         unsigned int uint_thres_;
     };
+
+    template <typename  Dtype>
+    class InnerProductLayer : public Layer<Dtype>{
+    public:
+        explicit InnerProductLayer(LayerParameter& param)
+        :Layer<Dtype>(param){};
+        virtual void SetUp(const vector<Blob<Dtype>* >& bottom, vector<Blob<Dtype>* >* top);
+
+    protected:
+        virtual void Forward_cpu(const vector<Blob<Dtype>* >& bottom, vector<Blob<Dtype>* >* top);
+        virtual void Forward_gpu(const vector<Blob<Dtype>* >& bottom, vector<Blob<Dtype>* >* top);
+
+        virtual Dtype Backward_cpu(const vector<Blob<Dtype>* >& top, const bool propagate_down, vector<Blob<Dtype>* >* bottom);
+        virtual Dtype Backward_gpu(const vector<Blob<Dtype>* >& top, const bool propagate_down, vector<Blob<Dtype>* >* bottom);
+
+        int M_;
+        int K_;
+        int N_;
+        bool biasterm_;
+    }; // InnerProductLayer
+
 } //namespace caffeine
 
 #endif //BLACK_CAFFE_VISION_LAYERS_HPP

@@ -15,7 +15,7 @@ namespace caffeine{
     (*top)[0]->Reshape(bottom[0]->num(), bottom[0]->channels(), bottom[0]->height(), bottom[0]->width());
 }
 
-template class NeuronLayer<float>;
-template class NeuronLayer<double>;
+INSTANTIATE_CLASS(NeuronLayer);
+
 } // namespace caffeine
 

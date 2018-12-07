@@ -95,6 +95,21 @@ public:
     } // func Fill
 }; // class GaussianFiller
 
+template <typename Dtype>
+Filler<Dtype>* GetFiller(const FillerParameter& param){
+    const std::string& type = param.type();
+    if(type == "constant"){
+        return new ConstantFiller<Dtype>(param);
+    }else if(type == "uniform"){
+        return new UniformFiller<Dtype>(param);
+    }else if(type == "gaussian"){
+        return new GaussianFiller<Dtype>(param);
+    } else{
+        CHECK(false) << "Unknown filler name: " << param.type();
+    }
+    return (Filler<Dtype>*)(NULL);
+}
+
 } // namespace caffeine
 
 #endif //BLACK_CAFFE_FILLER_HPP

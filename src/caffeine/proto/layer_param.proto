@@ -17,6 +17,10 @@ message LayerParameter{
     optional float dropout_ratio = 12 [default = 0.5];
     optional float alpha = 13 [default = 1.]; // for local response norm
     optional float beta = 14 [default = 0.75];
+
+    // for innerproduct: if true, carry out inner product computation on the
+    // last dim only
+    optional bool gemm_last_dim = 15 [ default = false];
 }
 
 message FillerParameter{
