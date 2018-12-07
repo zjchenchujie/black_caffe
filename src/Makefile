@@ -14,6 +14,7 @@ TEST_SRCS := $(shell find caffeine/test -name "test_*.cpp") gtest/gtest-all.cpp
 PROTO_SRCS := $(wildcard caffeine/proto/*.proto)
 PROTO_GEN_HEADER := ${PROTO_SRCS:.proto=.pb.h}
 PROTO_GEN_CC := ${PROTO_SRCS:.proto=.pb.cc}
+PROTO_GEN_PY := ${PROTO_SRCS:.proto=_pb2.py}
 CXX_OBJS := ${CXX_SRCS:.cpp=.o}
 CUDA_OBJS := ${CUDA_SRCS:.cu=.o}
 PROTO_OBJS := ${PROTO_SRCS:.proto=.pb.o}
@@ -41,11 +42,14 @@ LDFLAGS += $(foreach library,$(LIBRARIES),-l$(library))
 LINK = $(CXX) $(CXXFLAGS) $(CPPFLAGS) $(LDFLAGS) $(WARNINGS)
 NVCC = nvcc ${CXXFLAGS:-fPIC=-Xcompiler -fPIC} $(CPPFLAGS) $(CUDA_ARCH)
 
-.PHONY: all test clean distclean
+.PHONY: all test clean distclean linecount
 
 all: $(NAME)
 
 test: $(TEST_NAME)
+
+linecount:
+	cloc --read-lang-def=caffeine.cloc caffeine/
 
 $(TEST_NAME): $(OBJS) $(TEST_OBJS)
 	$(CXX) $(TEST_OBJS) $(OBJS) -o $(TEST_NAME) $(LDFLAGS) $(WARNINGS)
@@ -63,6 +67,6 @@ $(PROTO_GEN_CC): $(PROTO_SRCS)
 clean:
 	$(RM) $(NAME) $(TEST_NAME)
 	$(RM) $(OBJS) $(TEST_OBJS)
-	$(RM) $(PROTO_GEN_HEADER) $(PROTO_GEN_CC)
+	$(RM) $(PROTO_GEN_HEADER) $(PROTO_GEN_CC) $(PROTO_GEN_PY)
 
 distclean: clean
