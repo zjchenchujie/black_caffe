@@ -1,4 +1,5 @@
 #include "caffeine/blob.hpp"
+#include "caffeine/filler.hpp"
 
 #include <gtest/gtest.h>
 namespace caffeine{
@@ -47,6 +48,20 @@ TYPED_TEST(BlobSimpleTest, TestReshape){
     EXPECT_EQ(5, this->blob_->channels());
     EXPECT_EQ(120, this->blob_->count());
 
+}
+
+TYPED_TEST(BlobSimpleTest, TestSourceConstructor){
+    Blob<TypeParam> source(2, 3, 4, 5);
+    FillerParameter filler_parameter;
+    UniformFiller<TypeParam > filler(filler_parameter);
+    filler.Fill(&source);
+    Blob<TypeParam> target(source);
+    const int count = source.count();
+    const TypeParam *source_data = source.cpu_data();
+    const TypeParam *target_data = target.cpu_data();
+    for(int i=0 ; i<count; ++i){
+        EXPECT_EQ(source_data[i], target_data[i]);
+    }
 }
 
 }
