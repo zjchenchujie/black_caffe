@@ -17,6 +17,11 @@ int main(int argc, char** argv){
     int device;
     cudaGetDeviceCount(&device);
     cout << "Cuda number of devices:        " << device << endl;
+    if(argc > 1){
+        device = atoi(argv[1]);
+        cudaSetDevice(device);
+        cout << "Setting to use device " << device << endl;
+    }
     cudaGetDevice(&device);
     cout << "Current device id:             " << device << endl;
     cudaDeviceProp prop;
