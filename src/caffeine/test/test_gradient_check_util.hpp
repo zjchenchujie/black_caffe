@@ -12,14 +12,17 @@ namespace caffeine {
    template <typename Dtype>
    class GradientChecker{
    public:
-       GradientChecker(const Dtype stepsize, const Dtype threshold)
-       :stepsize_(stepsize), threshold_(threshold){};
+       GradientChecker(const Dtype stepsize, const Dtype threshold, const unsigned int seed = 1701, const Dtype kink = 0., const Dtype kink_range = -1)
+       :stepsize_(stepsize), threshold_(threshold), seed_(seed), kink_(kink), kink_range_(kink_range){};
 
        void CheckGradient(Layer<Dtype>& layer, vector<Blob<Dtype>* >& bottom, vector<Blob<Dtype>* >& top, int check_bottom = -1);
    protected:
     Dtype GetObjAndGradient(vector<Blob<Dtype>* >& top);
     Dtype stepsize_;
     Dtype threshold_;
+    unsigned int seed_;
+    Dtype kink_;
+    Dtype kink_range_;
    };
 
 }

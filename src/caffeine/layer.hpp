@@ -31,7 +31,7 @@ namespace caffeine {
         inline Dtype Backward(const std::vector<Blob<Dtype>*>& top,
                               const bool propagate_down,
                               std::vector<Blob<Dtype>*>* bottom);
-        vector<Blob<Dtype> >& params(){ return blobs_; }
+        vector<Blob<Dtype> >& params(){ return blobs_; };
 
     protected:
         // The protobuf that stores the layer parameters

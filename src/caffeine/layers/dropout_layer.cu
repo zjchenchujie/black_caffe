@@ -89,7 +89,9 @@ namespace caffeine {
                                     const unsigned int* mask, const unsigned int threshold, const float scale, Dtype* out_diff) {
         int index = threadIdx.x + blockIdx.x * blockDim.x;
         if (index < n) {
-            out_diff[index] = in_diff[index] * (mask[index] > threshold) * scale;
+            if (mask[index] > threshold) {
+                out_diff[index] = in_diff[index] * scale;
+            }
         }
     }
 

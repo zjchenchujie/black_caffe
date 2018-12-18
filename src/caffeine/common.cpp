@@ -11,8 +11,11 @@ namespace caffeine{
     Caffeine::Caffeine()
     :mode_(Caffeine::CPU), phase_(Caffeine::TRAIN){
         CUBLAS_CHECK(cublasCreate(&cublas_handle_));
+        CURAND_CHECK(curandCreateGenerator(&curand_generator_,
+                                           CURAND_RNG_PSEUDO_DEFAULT));
+        CURAND_CHECK(curandSetPseudoRandomGeneratorSeed(curand_generator_,
+                                                        1701ULL));
         VSL_CHECK(vslNewStream(&vsl_stream_, VSL_BRNG_MT19937, 1701));
-        CURAND_CHECK(curandCreateGenerator(&curand_generator_, CURAND_RNG_PSEUDO_XORWOW));
     }
 
     Caffeine::~Caffeine() {
@@ -61,6 +64,16 @@ namespace caffeine{
 
     void Caffeine::set_phase(Caffeine::Phase phase) {
         Get().phase_ = phase;
+    }
+
+    void Caffeine::set_random_seed(unsigned int seed) {
+        CURAND_CHECK(curandDestroyGenerator(curand_generator()));
+        CURAND_CHECK(curandCreateGenerator(&Get().curand_generator_,
+                                           CURAND_RNG_PSEUDO_DEFAULT));
+        CURAND_CHECK(curandSetPseudoRandomGeneratorSeed(curand_generator(),
+                                                        (unsigned long long)seed));
+        VSL_CHECK(vslDeleteStream(&(Get().vsl_stream_)));
+        VSL_CHECK(vslNewStream(&(Get().vsl_stream_), VSL_BRNG_MT19937, seed));
     }
 
 

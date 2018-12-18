@@ -36,6 +36,5 @@ namespace caffeine {
         }
     };
 
-    template class Layer<float>;
-    template class Layer<double>;
+    INSTANTIATE_CLASS(Layer);
 }  // namespace caffeine

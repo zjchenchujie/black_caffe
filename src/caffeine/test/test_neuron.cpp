@@ -10,6 +10,7 @@
 #include "caffeine/vision_layers.hpp"
 #include "caffeine/filler.hpp"
 #include "caffeine/blob.hpp"
+#include "caffeine/test/test_gradient_check_util.hpp"
 
 #include "gtest/gtest.h"
 
@@ -58,6 +59,15 @@ TYPED_TEST(NeuronLayerTest, TestReLU){
 
 }
 
+
+TYPED_TEST(NeuronLayerTest, TestReLUGradientCPU) {
+    LayerParameter layer_param;
+    Caffeine::set_mode(Caffeine::CPU);
+    ReLULayer<TypeParam> layer(layer_param);
+    GradientChecker<TypeParam> checker(1e-2, 1e-3, 1701, 0., 0.01);
+    checker.CheckGradient(layer, this->blob_bottom_vec_, this->blob_top_vec_);
+}
+
 TYPED_TEST(NeuronLayerTest, TestReLUGPU){
     LayerParameter layer_param;
     Caffeine::set_mode(Caffeine::GPU);
@@ -74,77 +84,107 @@ TYPED_TEST(NeuronLayerTest, TestReLUGPU){
     }
 }
 
-    TYPED_TEST(NeuronLayerTest, TestDropoutCPU) {
-        LayerParameter layer_param;
-        Caffeine::set_mode(Caffeine::CPU);
-        Caffeine::set_phase(Caffeine::TRAIN);
-        DropoutLayer<TypeParam> layer(layer_param);
-        layer.SetUp(this->blob_bottom_vec_, &(this->blob_top_vec_));
-        layer.Forward(this->blob_bottom_vec_, &(this->blob_top_vec_));
-        // Now, check values
-        const TypeParam* bottom_data = this->blob_bottom_->cpu_data();
-        const TypeParam* top_data = this->blob_top_->cpu_data();
-        float scale = 1. / (1. - layer_param.dropout_ratio());
-        for (int i = 0; i < this->blob_bottom_->count(); ++i) {
-            if (top_data[i] != 0) {
-                EXPECT_EQ(top_data[i], bottom_data[i] * scale);
-            }
-        }
-    }
+TYPED_TEST(NeuronLayerTest, TestReLUGradientGPU){
+    LayerParameter layer_param;
+    Caffeine::set_mode(Caffeine::GPU);
+    ReLULayer<TypeParam> layer(layer_param);
+    GradientChecker<TypeParam> checker(1e-2, 1e-3, 1701, 0., 0.01);
+    checker.CheckGradient(layer, this->blob_bottom_vec_, this->blob_top_vec_);
+}
 
-    TYPED_TEST(NeuronLayerTest, TestDropoutCPUTestPhase) {
-        LayerParameter layer_param;
-        Caffeine::set_mode(Caffeine::CPU);
-        Caffeine::set_phase(Caffeine::TEST);
-        DropoutLayer<TypeParam> layer(layer_param);
-        layer.SetUp(this->blob_bottom_vec_, &(this->blob_top_vec_));
-        layer.Forward(this->blob_bottom_vec_, &(this->blob_top_vec_));
-        // Now, check values
-        const TypeParam* bottom_data = this->blob_bottom_->cpu_data();
-        const TypeParam* top_data = this->blob_top_->cpu_data();
-        float scale = 1. / (1. - layer_param.dropout_ratio());
-        for (int i = 0; i < this->blob_bottom_->count(); ++i) {
-            if (top_data[i] != 0) {
-                EXPECT_EQ(top_data[i], bottom_data[i]);
-            }
-        }
-    }
 
-    TYPED_TEST(NeuronLayerTest, TestDropoutGPU) {
-        LayerParameter layer_param;
-        Caffeine::set_mode(Caffeine::GPU);
-        Caffeine::set_phase(Caffeine::TRAIN);
-        DropoutLayer<TypeParam> layer(layer_param);
-        layer.SetUp(this->blob_bottom_vec_, &(this->blob_top_vec_));
-        layer.Forward(this->blob_bottom_vec_, &(this->blob_top_vec_));
-        // Now, check values
-        const TypeParam* bottom_data = this->blob_bottom_->cpu_data();
-        const TypeParam* top_data = this->blob_top_->cpu_data();
-        float scale = 1. / (1. - layer_param.dropout_ratio());
-        for (int i = 0; i < this->blob_bottom_->count(); ++i) {
-            if (top_data[i] != 0) {
-                EXPECT_EQ(top_data[i], bottom_data[i] * scale);
-            }
-        }
-    }
 
-    TYPED_TEST(NeuronLayerTest, TestDropoutGPUTestPhase) {
-        LayerParameter layer_param;
-        Caffeine::set_mode(Caffeine::GPU);
-        Caffeine::set_phase(Caffeine::TEST);
-        DropoutLayer<TypeParam> layer(layer_param);
-        layer.SetUp(this->blob_bottom_vec_, &(this->blob_top_vec_));
-        layer.Forward(this->blob_bottom_vec_, &(this->blob_top_vec_));
-        // Now, check values
-        const TypeParam* bottom_data = this->blob_bottom_->cpu_data();
-        const TypeParam* top_data = this->blob_top_->cpu_data();
-        float scale = 1. / (1. - layer_param.dropout_ratio());
-        for (int i = 0; i < this->blob_bottom_->count(); ++i) {
-            if (top_data[i] != 0) {
-                EXPECT_EQ(top_data[i], bottom_data[i]);
-            }
+TYPED_TEST(NeuronLayerTest, TestDropoutCPU) {
+    LayerParameter layer_param;
+    Caffeine::set_mode(Caffeine::CPU);
+    Caffeine::set_phase(Caffeine::TRAIN);
+    DropoutLayer<TypeParam> layer(layer_param);
+    layer.SetUp(this->blob_bottom_vec_, &(this->blob_top_vec_));
+    layer.Forward(this->blob_bottom_vec_, &(this->blob_top_vec_));
+    // Now, check values
+    const TypeParam* bottom_data = this->blob_bottom_->cpu_data();
+    const TypeParam* top_data = this->blob_top_->cpu_data();
+    float scale = 1. / (1. - layer_param.dropout_ratio());
+    for (int i = 0; i < this->blob_bottom_->count(); ++i) {
+        if (top_data[i] != 0) {
+            EXPECT_EQ(top_data[i], bottom_data[i] * scale);
         }
     }
+}
+
+TYPED_TEST(NeuronLayerTest, TestDropoutGradientCPU) {
+    LayerParameter layer_param;
+    Caffeine::set_mode(Caffeine::CPU);
+    DropoutLayer<TypeParam> layer(layer_param);
+    GradientChecker<TypeParam> checker(1e-2, 1e-3);
+    checker.CheckGradient(layer, this->blob_bottom_vec_, this->blob_top_vec_);
+}
+
+
+
+TYPED_TEST(NeuronLayerTest, TestDropoutCPUTestPhase) {
+    LayerParameter layer_param;
+    Caffeine::set_mode(Caffeine::CPU);
+    Caffeine::set_phase(Caffeine::TEST);
+    DropoutLayer<TypeParam> layer(layer_param);
+    layer.SetUp(this->blob_bottom_vec_, &(this->blob_top_vec_));
+    layer.Forward(this->blob_bottom_vec_, &(this->blob_top_vec_));
+    // Now, check values
+    const TypeParam* bottom_data = this->blob_bottom_->cpu_data();
+    const TypeParam* top_data = this->blob_top_->cpu_data();
+    float scale = 1. / (1. - layer_param.dropout_ratio());
+    for (int i = 0; i < this->blob_bottom_->count(); ++i) {
+        if (top_data[i] != 0) {
+            EXPECT_EQ(top_data[i], bottom_data[i]);
+        }
+    }
+}
+
+
+
+TYPED_TEST(NeuronLayerTest, TestDropoutGPU) {
+    LayerParameter layer_param;
+    Caffeine::set_mode(Caffeine::GPU);
+    Caffeine::set_phase(Caffeine::TRAIN);
+    DropoutLayer<TypeParam> layer(layer_param);
+    layer.SetUp(this->blob_bottom_vec_, &(this->blob_top_vec_));
+    layer.Forward(this->blob_bottom_vec_, &(this->blob_top_vec_));
+    // Now, check values
+    const TypeParam* bottom_data = this->blob_bottom_->cpu_data();
+    const TypeParam* top_data = this->blob_top_->cpu_data();
+    float scale = 1. / (1. - layer_param.dropout_ratio());
+    for (int i = 0; i < this->blob_bottom_->count(); ++i) {
+        if (top_data[i] != 0) {
+            EXPECT_EQ(top_data[i], bottom_data[i] * scale);
+        }
+    }
+}
+
+//TYPED_TEST(NeuronLayerTest, TestDropoutGradientGPU) {
+//    LayerParameter layer_param;
+//    Caffeine::set_mode(Caffeine::GPU);
+//    DropoutLayer<TypeParam> layer(layer_param);
+//    GradientChecker<TypeParam> checker(1e-2, 1e-3, 1701, 0., 0.01);
+//    checker.CheckGradient(layer, this->blob_bottom_vec_, this->blob_top_vec_);
+//}
+
+TYPED_TEST(NeuronLayerTest, TestDropoutGPUTestPhase) {
+    LayerParameter layer_param;
+    Caffeine::set_mode(Caffeine::GPU);
+    Caffeine::set_phase(Caffeine::TEST);
+    DropoutLayer<TypeParam> layer(layer_param);
+    layer.SetUp(this->blob_bottom_vec_, &(this->blob_top_vec_));
+    layer.Forward(this->blob_bottom_vec_, &(this->blob_top_vec_));
+    // Now, check values
+    const TypeParam* bottom_data = this->blob_bottom_->cpu_data();
+    const TypeParam* top_data = this->blob_top_->cpu_data();
+    float scale = 1. / (1. - layer_param.dropout_ratio());
+    for (int i = 0; i < this->blob_bottom_->count(); ++i) {
+        if (top_data[i] != 0) {
+            EXPECT_EQ(top_data[i], bottom_data[i]);
+        }
+    }
+}
 
 } // namespace caffeine
 

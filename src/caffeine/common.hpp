@@ -43,6 +43,7 @@ public:
 
     static void set_mode(Brew mode);
     static void set_phase(Phase phase);
+    static void set_random_seed(unsigned int seed);
 
 private:
     Caffeine();
