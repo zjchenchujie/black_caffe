@@ -72,6 +72,7 @@ namespace caffeine{
         int K_;
         int N_;
         bool biasterm_;
+        shared_ptr<SyncedMemory> bias_multiplier_;
     }; // InnerProductLayer
 
 } //namespace caffeine

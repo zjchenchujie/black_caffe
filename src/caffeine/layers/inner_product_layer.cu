@@ -48,6 +48,11 @@ namespace caffeine{
             shared_ptr<Filler<Dtype> > bias_filler(
                     GetFiller<Dtype>(this->layer_param_.bias_filler()));
             bias_filler->Fill(&(this->blobs_[1]));
+            bias_multiplier_.reset(new SyncedMemory(M_ * sizeof(Dtype)));
+            Dtype* bias_multiplier_data = (Dtype*)bias_multiplier_->mutable_cpu_data();
+            for (int i = 0; i < M_; ++i) {
+                bias_multiplier_data[i] = 1.;
+            }
         }
     } // setup fun
 
@@ -69,10 +74,9 @@ namespace caffeine{
                             (float*)top_data, N_);
                 if (bias) {
                     // add bias
-                    for (int i = 0; i < M_; ++i) {
-                        cblas_saxpy(N_, 1., (const float*)bias, 1,
-                                    (float*)(top_data) + (N_ * i), 1);
-                    }
+                    cblas_sgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, M_, N_, 1,
+                                1., (const float*)bias_multiplier_->cpu_data(), 1,
+                                (const float*)bias, N_, 1., (float*)top_data, N_);
                 }
                 break;
             case sizeof(double):
@@ -82,10 +86,9 @@ namespace caffeine{
                             (double*)top_data, N_);
                 if (bias) {
                     // add bias
-                    for (int i = 0; i < M_; ++i) {
-                        cblas_daxpy(N_, 1., (const double*)bias, 1,
-                                    (double*)(top_data) + (N_ * i), 1);
-                    }
+                    cblas_sgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, M_, N_, 1,
+                                1., (const float*)bias_multiplier_->cpu_data(), 1,
+                                (const float*)bias, N_, 1., (float*)top_data, N_);
                 }
                 break;
             default:
@@ -97,12 +100,15 @@ namespace caffeine{
     Dtype InnerProductLayer<Dtype>::Backward_cpu(const vector<Blob<Dtype>* >& top,
                                                  const bool propagate_down,
                                                  vector<Blob<Dtype>*>* bottom) {
-        CHECK(false);
+        // TODO: gradient w.r.t the params
+        if (propagate_down) {
+            // TODO: gradient w.r.t. the bottom
+        }
         return Dtype(0);
     }// Baceward_cpu fun
 
     template <typename Dtype>
-    __global__ void BroadcastCopy(const int total, const int vec_len,
+    __global__ void BroadcastRow(const int total, const int vec_len,
                                   const Dtype* in_vec, Dtype* out_matrix) {
         int index = threadIdx.x + blockIdx.x * blockDim.x;
         if (index < total) {
@@ -124,7 +130,7 @@ namespace caffeine{
             beta = 1.;
             const int count = (*top)[0]->count();
             // we pre-copy the bias to the results, and then call gemm.
-            BroadcastCopy<<<CAFFEINE_GET_BLOCKS(count), CAFFEINE_CUDA_NUM_THREADS>>>(
+            BroadcastRow<<<CAFFEINE_GET_BLOCKS(count), CAFFEINE_CUDA_NUM_THREADS>>>(
                     count, N_, bias, top_data);
         }
         switch(sizeof(Dtype)) {
