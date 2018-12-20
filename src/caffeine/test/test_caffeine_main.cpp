@@ -5,8 +5,16 @@
 #include <glog/logging.h>
 #include <cuda_runtime.h>
 #include <iostream>
+#include <cstdlib>
+#include <cstdio>
+
+
+namespace caffeine{
+    cudaDeviceProp CAFFEINE_TEST_CUDA_PROP;
+}
 
 using namespace std;
+using namespace caffeine;
 
 int main(int argc, char** argv){
     ::testing::InitGoogleTest(&argc, argv);

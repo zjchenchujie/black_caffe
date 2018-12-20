@@ -1,5 +1,25 @@
 package caffeine;
 
+
+message BlobProto{
+    optional int32 num = 1 [default = 0];
+    optional int32 channels = 2 [default = 0];
+    optional int32 height = 3 [default = 0];
+    optional int32 width = 4 [default = 0];
+    repeated float data = 5;
+    repeated float diff = 6;
+
+}
+
+message FillerParameter{
+    required string type = 1 [default = "gaussian"];
+    optional float value = 2 [default = 0]; // the value in constant filler
+    optional float min = 3 [default = 0]; // uni min
+    optional float max = 4 [default = 1]; //uni max
+    optional float mean = 5 [default = 0]; // gaussian mean
+    optional float std = 6 [default = 1]; //gaussian standard
+}
+
 message LayerParameter{
     required string name = 1; // the layer name
     required string type = 2; // the string to specify the layer type
@@ -7,7 +27,7 @@ message LayerParameter{
     optional int32 num_output = 3;
     optional bool bias_term = 4 [default = true];
     optional FillerParameter weight_filler = 5;
-    optional FillerParameter bias_filler =6;
+    optional FillerParameter bias_filler = 6;
 
     optional int32 pad = 7 [default = 0];
     optional int32 kernelsize = 8;
@@ -17,27 +37,5 @@ message LayerParameter{
     optional float dropout_ratio = 12 [default = 0.5];
     optional float alpha = 13 [default = 1.]; // for local response norm
     optional float beta = 14 [default = 0.75];
-
-    // for innerproduct: if true, carry out inner product computation on the
-    // last dim only
-    optional bool gemm_last_dim = 15 [ default = false];
-}
-
-message FillerParameter{
-    required string type = 1 [default = "constant"];
-    optional float value = 2 [default = 0]; // the value in constant filler
-    optional float min = 3 [default = 0]; // uni min
-    optional float max = 4 [default = 1]; //uni max
-    optional float mean = 5 [default = 0]; // gaussian mean
-    optional float std = 6 [default = 1]; //gaussian standard
-}
-
-message BlobProto{
-    optional int32 num = 1 [default = 0];
-    optional int32 channels = 2 [default = 0];
-    optional int32 height = 3 [default = 0];
-    optional int32 width = 4 [default = 0];
-    repeated float data = 5;
-    repeated float diff = 6;
 
 }

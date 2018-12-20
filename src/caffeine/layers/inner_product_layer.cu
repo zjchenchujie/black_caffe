@@ -14,21 +14,12 @@ namespace caffeine{
         CHECK_EQ(bottom.size(), 1) << "IP Layer takes a single blob as input.";
         CHECK_EQ(top->size(), 1) << "IP Layer takes a single blob as output. ";
         const int num_output = this->layer_param_.num_output();
-        const bool gemm_last_dim = this->layer_param_.gemm_last_dim();
         biasterm_ = this->layer_param_.bias_term();
         // Figure out the dimemsions
-        if(gemm_last_dim){
-            M_ = bottom[0]->count() / bottom[0]->channels();
-            K_ = bottom[0]->channels();
-            N_ = num_output;
-            (*top)[0]->Reshape(bottom[0]->num(), bottom[0]->height(),
-                               bottom[0]->width(), num_output);
-        } else {
-            M_ = bottom[0]->num();
-            K_ = bottom[0]->count() / bottom[0]->num();
-            N_ = num_output;
-            (*top)[0]->Reshape(bottom[0]->num(), 1, 1, num_output);
-        }
+        M_ = bottom[0]->num();
+        K_ = bottom[0]->count() / bottom[0]->num();
+        N_ = num_output;
+        (*top)[0]->Reshape(bottom[0]->num(), num_output, 1, 1);
 
         if (biasterm_) {
             this->blobs_.resize(2);
@@ -100,10 +91,8 @@ namespace caffeine{
     Dtype InnerProductLayer<Dtype>::Backward_cpu(const vector<Blob<Dtype>* >& top,
                                                  const bool propagate_down,
                                                  vector<Blob<Dtype>*>* bottom) {
-        // TODO: gradient w.r.t the params
-        if (propagate_down) {
-            // TODO: gradient w.r.t. the bottom
-        }
+        const Dtype* top_diff = top[0]->cpu_diff();
+        CHECK(false);
         return Dtype(0);
     }// Baceward_cpu fun
 

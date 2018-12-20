@@ -34,18 +34,18 @@ TYPED_TEST(BlobSimpleTest, TestInitialization){
     EXPECT_EQ(0, this->blob_->channels());
     EXPECT_EQ(0, this->blob_->count());
     EXPECT_EQ(2, this->blob_preshaped_->num());
-    EXPECT_EQ(3, this->blob_preshaped_->height());
-    EXPECT_EQ(4, this->blob_preshaped_->width());
-    EXPECT_EQ(5, this->blob_preshaped_->channels());
+    EXPECT_EQ(3, this->blob_preshaped_->channels());
+    EXPECT_EQ(4, this->blob_preshaped_->height());
+    EXPECT_EQ(5, this->blob_preshaped_->width());
     EXPECT_EQ(120, this->blob_preshaped_->count());
 }
 
 TYPED_TEST(BlobSimpleTest, TestReshape){
     this->blob_->Reshape(2,3,4,5);
-    EXPECT_EQ(2, this->blob_->num());
-    EXPECT_EQ(3, this->blob_->height());
-    EXPECT_EQ(4, this->blob_->width());
-    EXPECT_EQ(5, this->blob_->channels());
+    EXPECT_EQ(2, this->blob_preshaped_->num());
+    EXPECT_EQ(3, this->blob_preshaped_->channels());
+    EXPECT_EQ(4, this->blob_preshaped_->height());
+    EXPECT_EQ(5, this->blob_preshaped_->width());
     EXPECT_EQ(120, this->blob_->count());
 
 }
@@ -59,6 +59,10 @@ TYPED_TEST(BlobSimpleTest, TestSourceConstructor){
     const int count = source.count();
     const TypeParam *source_data = source.cpu_data();
     const TypeParam *target_data = target.cpu_data();
+    EXPECT_EQ(target.num(), source.num());
+    EXPECT_EQ(target.channels(), source.channels());
+    EXPECT_EQ(target.height(),source.height());
+    EXPECT_EQ(target.width(), source.width());
     for(int i=0 ; i<count; ++i){
         EXPECT_EQ(source_data[i], target_data[i]);
     }
