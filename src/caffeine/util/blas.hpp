@@ -26,6 +26,16 @@ namespace caffeine {
                         const Dtype alpha, const Dtype* A, const Dtype* B, const Dtype beta,
                         Dtype* C);
 
+    template <typename Dtype>
+    void decaf_cpu_gemv(const CBLAS_TRANSPOSE TransA, const int M, const int N,
+                        const Dtype alpha, const Dtype* A, const Dtype* x, const Dtype beta,
+                        Dtype* y);
+
+    template <typename Dtype>
+    void decaf_gpu_gemv(const CBLAS_TRANSPOSE TransA, const int M, const int N,
+                        const Dtype alpha, const Dtype* A, const Dtype* x, const Dtype beta,
+                        Dtype* y);
+
 }  // namespace caffeine
 
 #endif //BLACK_CAFFE_GEMM_HPP
