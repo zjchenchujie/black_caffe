@@ -2,10 +2,16 @@
 // Created by chujie on 12/8/18.
 //
 
-#include "caffeine/vision_layers.hpp"
-#include "caffeine/blob.hpp"
-#include "caffeine/filler.hpp"
+#include <cstring>
+#include <cuda_runtime.h>
+
 #include "gtest/gtest.h"
+#include "caffeine/blob.hpp"
+#include "caffeine/common.hpp"
+#include "caffeine/filler.hpp"
+#include "caffeine/vision_layers.hpp"
+#include "caffeine/test/test_gradient_check_util.hpp"
+
 namespace caffeine{
 
 extern cudaDeviceProp CAFFEINE_TEST_CUDA_PROP;
@@ -93,6 +99,38 @@ TYPED_TEST(InnerProductLayerTest, TestForwardCPU){
             for (int i = 0; i < count; ++i) {
                 EXPECT_GE(data[i], 1.);
             }
+        } else {
+            LOG(ERROR) << "Skipping test due to old architecture.";
+        }
+    }
+
+
+
+TYPED_TEST(InnerProductLayerTest, TestCPUGradient) {
+        LayerParameter layer_param;
+        Caffeine::set_mode(Caffeine::CPU);
+        layer_param.set_num_output(10);
+        layer_param.mutable_weight_filler()->set_type("uniform");
+        layer_param.mutable_bias_filler()->set_type("uniform");
+        layer_param.mutable_bias_filler()->set_min(1);
+        layer_param.mutable_bias_filler()->set_max(2);
+        InnerProductLayer<TypeParam> layer(layer_param);
+        GradientChecker<TypeParam> checker(1e-2, 1e-2);
+        checker.CheckGradient(layer, this->bottom_data_vec_, this->top_data_vec_);
+}
+
+    TYPED_TEST(InnerProductLayerTest, TestGPUGradient) {
+        if (sizeof(TypeParam) == 4 || CAFFEINE_TEST_CUDA_PROP.major >= 2) {
+            LayerParameter layer_param;
+            Caffeine::set_mode(Caffeine::GPU);
+            layer_param.set_num_output(10);
+            layer_param.mutable_weight_filler()->set_type("uniform");
+            layer_param.mutable_bias_filler()->set_type("uniform");
+            layer_param.mutable_bias_filler()->set_min(1);
+            layer_param.mutable_bias_filler()->set_max(2);
+            InnerProductLayer<TypeParam> layer(layer_param);
+            GradientChecker<TypeParam> checker(1e-2, 1e-2);
+            checker.CheckGradient(layer, this->bottom_data_vec_, this->top_data_vec_);
         } else {
             LOG(ERROR) << "Skipping test due to old architecture.";
         }

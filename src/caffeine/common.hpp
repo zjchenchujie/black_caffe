@@ -16,6 +16,8 @@
 #define CURAND_CHECK(condition)     CHECK_EQ((condition), CURAND_STATUS_SUCCESS)
 #define VSL_CHECK(condition)        CHECK_EQ((condition), VSL_STATUS_OK)
 
+#define NOT_IMPLEMENTED CHECK(false) << "Not Implemented"
+
 #define INSTANTIATE_CLASS(classname) \
   template class classname<float>; \
   template class classname<double>
