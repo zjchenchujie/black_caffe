@@ -13,7 +13,7 @@
 
 namespace caffeine{
 
-    extern cudaDeviceProp CAFFEINE_TEST_CUA_PROP;
+    extern cudaDeviceProp CAFFEINE_TEST_CUDA_PROP;
 
     template<typename Dtype>
 class PaddingLayerTest : public ::testing::Test{
@@ -43,25 +43,29 @@ protected:
     TYPED_TEST_CASE(PaddingLayerTest, Dtypes);
 
     TYPED_TEST(PaddingLayerTest, TestCPU) {
-        LayerParameter layer_param;
-        layer_param.set_pad(1);
-        Caffeine::set_mode(Caffeine::CPU);
-        PaddingLayer<TypeParam> layer(layer_param);
-        layer.SetUp(this->blob_bottom_vec_, &(this->blob_top_vec_));
-        layer.Forward(this->blob_bottom_vec_, &(this->blob_top_vec_));
-        EXPECT_EQ(this->blob_top_->num(), 2);
-        EXPECT_EQ(this->blob_top_->channels(), 3);
-        EXPECT_EQ(this->blob_top_->height(), 6);
-        EXPECT_EQ(this->blob_top_->width(), 7);
-        for (int n = 0; n < 2; ++n) {
-            for (int c = 0; c < 3; ++c) {
-                for (int h = 0; h < 4; ++h) {
-                    for (int w = 0; w < 5; ++w) {
-                        EXPECT_EQ(this->blob_bottom_->data_at(n, c, h, w),
-                                  this->blob_top_->data_at(n, c, h + 1, w + 1));
+        if(CAFFEINE_TEST_CUDA_PROP.major >=2){
+            LayerParameter layer_param;
+            layer_param.set_pad(1);
+            Caffeine::set_mode(Caffeine::CPU);
+            PaddingLayer<TypeParam> layer(layer_param);
+            layer.SetUp(this->blob_bottom_vec_, &(this->blob_top_vec_));
+            layer.Forward(this->blob_bottom_vec_, &(this->blob_top_vec_));
+            EXPECT_EQ(this->blob_top_->num(), 2);
+            EXPECT_EQ(this->blob_top_->channels(), 3);
+            EXPECT_EQ(this->blob_top_->height(), 6);
+            EXPECT_EQ(this->blob_top_->width(), 7);
+            for (int n = 0; n < 2; ++n) {
+                for (int c = 0; c < 3; ++c) {
+                    for (int h = 0; h < 4; ++h) {
+                        for (int w = 0; w < 5; ++w) {
+                            EXPECT_EQ(this->blob_bottom_->data_at(n, c, h, w),
+                                      this->blob_top_->data_at(n, c, h + 1, w + 1));
+                        }
                     }
                 }
             }
+        }else{
+            LOG(ERROR)<<"sKIPING test (GPU version too low).";
         }
     }
 
@@ -75,35 +79,43 @@ protected:
     }
 
     TYPED_TEST(PaddingLayerTest, TestGPU) {
-        LayerParameter layer_param;
-        layer_param.set_pad(1);
-        Caffeine::set_mode(Caffeine::GPU);
-        PaddingLayer<TypeParam> layer(layer_param);
-        layer.SetUp(this->blob_bottom_vec_, &(this->blob_top_vec_));
-        layer.Forward(this->blob_bottom_vec_, &(this->blob_top_vec_));
-        EXPECT_EQ(this->blob_top_->num(), 2);
-        EXPECT_EQ(this->blob_top_->channels(), 3);
-        EXPECT_EQ(this->blob_top_->height(), 6);
-        EXPECT_EQ(this->blob_top_->width(), 7);
-        for (int n = 0; n < 2; ++n) {
-            for (int c = 0; c < 3; ++c) {
-                for (int h = 0; h < 4; ++h) {
-                    for (int w = 0; w < 5; ++w) {
-                        EXPECT_EQ(this->blob_bottom_->data_at(n, c, h, w),
-                                  this->blob_top_->data_at(n, c, h + 1, w + 1));
+        if(CAFFEINE_TEST_CUDA_PROP.major >= 2){
+            LayerParameter layer_param;
+            layer_param.set_pad(1);
+            Caffeine::set_mode(Caffeine::GPU);
+            PaddingLayer<TypeParam> layer(layer_param);
+            layer.SetUp(this->blob_bottom_vec_, &(this->blob_top_vec_));
+            layer.Forward(this->blob_bottom_vec_, &(this->blob_top_vec_));
+            EXPECT_EQ(this->blob_top_->num(), 2);
+            EXPECT_EQ(this->blob_top_->channels(), 3);
+            EXPECT_EQ(this->blob_top_->height(), 6);
+            EXPECT_EQ(this->blob_top_->width(), 7);
+            for (int n = 0; n < 2; ++n) {
+                for (int c = 0; c < 3; ++c) {
+                    for (int h = 0; h < 4; ++h) {
+                        for (int w = 0; w < 5; ++w) {
+                            EXPECT_EQ(this->blob_bottom_->data_at(n, c, h, w),
+                                      this->blob_top_->data_at(n, c, h + 1, w + 1));
+                        }
                     }
                 }
             }
+        }else{
+            LOG(ERROR)<<"sKIPING test (GPU version too low).";
         }
     }
 
     TYPED_TEST(PaddingLayerTest, TestGPUGrad) {
-        LayerParameter layer_param;
-        layer_param.set_pad(1);
-        Caffeine::set_mode(Caffeine::GPU);
-        PaddingLayer<TypeParam> layer(layer_param);
-        GradientChecker<TypeParam> checker(1e-2, 1e-3);
-        checker.CheckGradient(layer, this->blob_bottom_vec_, this->blob_top_vec_);
+        if(CAFFEINE_TEST_CUDA_PROP.major >= 2){
+            LayerParameter layer_param;
+            layer_param.set_pad(1);
+            Caffeine::set_mode(Caffeine::GPU);
+            PaddingLayer<TypeParam> layer(layer_param);
+            GradientChecker<TypeParam> checker(1e-2, 1e-3);
+            checker.CheckGradient(layer, this->blob_bottom_vec_, this->blob_top_vec_);
+        }else{
+            LOG(ERROR)<<"sKIPING test (GPU version too low).";
+        }
     }
 
 
