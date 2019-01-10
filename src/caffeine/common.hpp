@@ -18,6 +18,11 @@
 
 #define NOT_IMPLEMENTED CHECK(false) << "Not Implemented"
 
+#define CUDA_POST_KERNEL_CHECK \
+  if (cudaSuccess != cudaPeekAtLastError()) {\
+    LOG(FATAL) << "Cuda kernel failed. Error: " << cudaGetLastError(); \
+  }
+
 #define INSTANTIATE_CLASS(classname) \
   template class classname<float>; \
   template class classname<double>

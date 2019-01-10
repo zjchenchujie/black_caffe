@@ -87,15 +87,6 @@ namespace caffeine{
         return Dtype(0);
     }// Baceward_cpu fun
 
-    template <typename Dtype>
-    __global__ void BroadcastRow(const int total, const int vec_len,
-                                  const Dtype* in_vec, Dtype* out_matrix) {
-        int index = threadIdx.x + blockIdx.x * blockDim.x;
-        if (index < total) {
-            int v_index = index % vec_len;
-            out_matrix[index] = in_vec[v_index];
-        }
-    }
 
     template <typename Dtype>
     void InnerProductLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,

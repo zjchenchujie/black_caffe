@@ -32,6 +32,16 @@ public:
     inline int width() const { return width_; }
     inline int count() const { return count_; }
 
+    inline Dtype data_at(const int n, const int c, const int h,
+                         const int w) const {
+        return cpu_data()[((n * channels_ + c) * height_ + h) * width_ + w];
+    }
+
+    inline Dtype diff_at(const int n, const int c, const int h,
+                         const int w) const {
+        return cpu_diff()[((n * channels_ + c) * height_ + h) * width_ + w];
+    }
+
     const Dtype* cpu_data() const;
     const Dtype* gpu_data() const;
     const Dtype* cpu_diff() const;
