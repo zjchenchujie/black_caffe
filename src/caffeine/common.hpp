@@ -16,7 +16,7 @@
 #define CURAND_CHECK(condition)     CHECK_EQ((condition), CURAND_STATUS_SUCCESS)
 #define VSL_CHECK(condition)        CHECK_EQ((condition), VSL_STATUS_OK)
 
-#define NOT_IMPLEMENTED CHECK(false) << "Not Implemented"
+#define NOT_IMPLEMENTED LOG(FATAL) << "Not Implemented Yet"
 
 #define CUDA_POST_KERNEL_CHECK \
   if (cudaSuccess != cudaPeekAtLastError()) {\

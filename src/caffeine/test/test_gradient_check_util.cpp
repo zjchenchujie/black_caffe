@@ -15,7 +15,7 @@ namespace caffeine {
         // First, figure out what blobs we need to check against.
         vector<Blob<Dtype>*> blobs_to_check;
         for (int i = 0; i < layer.params().size(); ++i) {
-            blobs_to_check.push_back(&(layer.params()[i]));
+            blobs_to_check.push_back(&layer.params()[i]);
         }
         if (check_bottom < 0) {
             for (int i = 0; i < bottom.size(); ++i) {
@@ -26,7 +26,7 @@ namespace caffeine {
             blobs_to_check.push_back(bottom[check_bottom]);
         }
         // go through the blobs
-        LOG(ERROR) << "Checking " << blobs_to_check.size() << " blobs. ";
+        LOG(ERROR) << "Checking " << blobs_to_check.size() << " blobs.";
         for (int blobid = 0; blobid < blobs_to_check.size(); ++blobid) {
             Blob<Dtype>* current_blob = blobs_to_check[blobid];
             LOG(ERROR) << "Blob " << blobid << ": checking " << current_blob->count()
@@ -57,9 +57,9 @@ namespace caffeine {
                 Dtype estimated_gradient = (positive_objective - negative_objective) /
                                            stepsize_ / 2.;
                 Dtype feature = current_blob->cpu_data()[feat_id];
-//                LOG(ERROR) << "debug: " << current_blob->cpu_data()[feat_id] << " "
-//                           << current_blob->cpu_diff()[feat_id];
-                if(kink_ - kink_range_ > feature || feature > kink_ + kink_range_){
+                //LOG(ERROR) << "debug: " << current_blob->cpu_data()[feat_id] << " "
+                //    << current_blob->cpu_diff()[feat_id];
+                if (kink_ - kink_range_ > feature || feature > kink_ + kink_range_) {
                     // We check relative accuracy, but for too small values, we threshold
                     // the scale factor by 1.
                     Dtype scale = max(max(fabs(computed_gradient), fabs(estimated_gradient)),
@@ -67,9 +67,9 @@ namespace caffeine {
                     EXPECT_GT(computed_gradient, estimated_gradient - threshold_ * scale);
                     EXPECT_LT(computed_gradient, estimated_gradient + threshold_ * scale);
                 }
-
-
-
+                //LOG(ERROR) << "Feature: " << current_blob->cpu_data()[feat_id];
+                //LOG(ERROR) << "computed gradient: " << computed_gradient
+                //    << " estimated_gradient: " << estimated_gradient;
             }
         }
     }

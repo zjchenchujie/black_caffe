@@ -52,7 +52,6 @@ linecount:
 	cloc --read-lang-def=caffeine.cloc caffeine/
 
 $(TEST_NAME): $(OBJS) $(TEST_OBJS)
-	@echo $(CXX_SRCS)
 	$(CXX) $(TEST_OBJS) $(OBJS) -o $(TEST_NAME) $(LDFLAGS) $(WARNINGS)
 	./$(TEST_NAME)
 
