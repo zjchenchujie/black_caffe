@@ -75,7 +75,7 @@ protected:
         Caffeine::set_mode(Caffeine::CPU);
         PaddingLayer<TypeParam> layer(layer_param);
         GradientChecker<TypeParam> checker(1e-2, 1e-3);
-        checker.CheckGradient(layer, this->blob_bottom_vec_, this->blob_top_vec_);
+        checker.CheckGradientExhaustive(layer, this->blob_bottom_vec_, this->blob_top_vec_);
     }
 
     TYPED_TEST(PaddingLayerTest, TestGPU) {
@@ -112,7 +112,7 @@ protected:
             Caffeine::set_mode(Caffeine::GPU);
             PaddingLayer<TypeParam> layer(layer_param);
             GradientChecker<TypeParam> checker(1e-2, 1e-3);
-            checker.CheckGradient(layer, this->blob_bottom_vec_, this->blob_top_vec_);
+            checker.CheckGradientExhaustive(layer, this->blob_bottom_vec_, this->blob_top_vec_);
         }else{
             LOG(ERROR)<<"sKIPING test (GPU version too low).";
         }
