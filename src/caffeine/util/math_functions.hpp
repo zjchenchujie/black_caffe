@@ -36,6 +36,23 @@ namespace caffeine {
                         const Dtype alpha, const Dtype* A, const Dtype* x, const Dtype beta,
                         Dtype* y);
 
+    template <typename Dtype>
+    void caffeine_axpy(const int N, const Dtype alpha, const Dtype* X,
+                       Dtype* Y);
+
+    template <typename Dtype>
+    void caffeine_copy(const int N, const Dtype *X, Dtype *Y);
+
+    template <typename Dtype>
+    void caffeine_sqr(const int N, const Dtype* a, Dtype* y);
+
+    template <typename Dtype>
+    void caffeine_mul(const int N, const Dtype* a, const Dtype* b, Dtype* y);
+
+    template <typename Dtype>
+    void caffeine_powx(const int n, const Dtype* a, const Dtype b, Dtype* y);
+
+
 }  // namespace caffeine
 
 #endif //BLACK_CAFFE_GEMM_HPP

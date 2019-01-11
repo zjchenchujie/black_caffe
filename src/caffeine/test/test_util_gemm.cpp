@@ -9,7 +9,7 @@
 
 #include "gtest/gtest.h"
 #include "caffeine/blob.hpp"
-#include "caffeine/util/blas.hpp"
+#include "caffeine/util/math_functions.hpp"
 
 namespace caffeine{
     extern cudaDeviceProp CAFFEINE_TEST_CUDA_PROP;

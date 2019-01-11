@@ -4,7 +4,7 @@
 #include "caffeine/common.hpp"
 #include <cublas_v2.h>
 #include <mkl.h>
-#include "caffeine/util/blas.hpp"
+#include "caffeine/util/math_functions.hpp"
 
 namespace caffeine{
 
@@ -95,6 +95,50 @@ namespace caffeine{
         CUBLAS_CHECK(cublasDgemv(Caffeine::cublas_handle(), cuTransA, N, M, &alpha,
                                  A, N, x, 1, &beta, y, 1));
     }
+
+    template <>
+    void caffeine_axpy<float>(const int N, const float alpha, const float* X,
+                              float* Y) { cblas_saxpy(N, alpha, X, 1, Y, 1); }
+
+    template <>
+    void caffeine_axpy<double>(const int N, const double alpha, const double* X,
+                               double* Y) { cblas_daxpy(N, alpha, X, 1, Y, 1); }
+
+    template <>
+    void caffeine_copy<float>(const int N, const float* X, float* Y) {
+        cblas_scopy(N, X, 1, Y, 1);
+    }
+
+    template <>
+    void caffeine_copy<double>(const int N, const double* X, double* Y) {
+        cblas_dcopy(N, X, 1, Y, 1);
+    }
+
+    template <>
+    void caffeine_sqr<float>(const int n, const float* a, float* y){
+        vsSqr(n, a, y);
+    }
+
+    template <>
+    void caffeine_sqr<double>(const int n, const double* a, double* y) {
+        vdSqr(n, a, y);
+    }
+
+    template <>
+    void caffeine_mul<float>(const int n, const float* a, const float* b,
+                             float* y) { vsMul(n, a, b, y); }
+
+    template <>
+    void caffeine_mul<double>(const int n, const double* a, const double* b,
+                              double* y) { vdMul(n, a, b, y); }
+
+    template <>
+    void caffeine_powx<float>(const int n, const float* a, const float b,
+                              float* y) { vsPowx(n, a, b, y); }
+
+    template <>
+    void caffeine_powx<double>(const int n, const double* a, const double b,
+                               double* y) { vdPowx(n, a, b, y); }
 
 }
 

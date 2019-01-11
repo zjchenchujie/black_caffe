@@ -48,7 +48,7 @@ all: $(NAME)
 
 test: $(TEST_NAME)
 
-linecount:
+linecount: clean
 	cloc --read-lang-def=caffeine.cloc caffeine/
 
 $(TEST_NAME): $(OBJS) $(TEST_OBJS)
