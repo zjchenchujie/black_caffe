@@ -50,6 +50,9 @@ namespace caffeine {
     void caffeine_mul(const int N, const Dtype* a, const Dtype* b, Dtype* y);
 
     template <typename Dtype>
+    void caffeine_div(const int N, const Dtype* a, const Dtype* b, Dtype* y);
+
+    template <typename Dtype>
     void caffeine_powx(const int n, const Dtype* a, const Dtype b, Dtype* y);
 
 

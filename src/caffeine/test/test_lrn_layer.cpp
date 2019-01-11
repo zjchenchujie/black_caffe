@@ -1,6 +1,3 @@
-//
-// Created by chujie on 1/11/19.
-//
 #include <algorithm>
 #include <cstring>
 #include <cuda_runtime.h>
@@ -24,8 +21,10 @@ namespace caffeine {
     class LRNLayerTest : public ::testing::Test {
     protected:
         LRNLayerTest()
-                : blob_bottom_(new Blob<Dtype>(1, 10, 1, 1)),
-                  blob_top_(new Blob<Dtype>()) {
+                : blob_bottom_(new Blob<Dtype>()),
+                  blob_top_(new Blob<Dtype>()) {};
+        virtual void SetUp() {
+            blob_bottom_->Reshape(2,7,3,3);
             // fill the values
             FillerParameter filler_param;
             GaussianFiller<Dtype> filler(filler_param);
@@ -80,10 +79,10 @@ namespace caffeine {
         LayerParameter layer_param;
         LRNLayer<TypeParam> layer(layer_param);
         layer.SetUp(this->blob_bottom_vec_, &(this->blob_top_vec_));
-        EXPECT_EQ(this->blob_top_->num(), 1);
-        EXPECT_EQ(this->blob_top_->channels(), 10);
-        EXPECT_EQ(this->blob_top_->height(), 1);
-        EXPECT_EQ(this->blob_top_->width(), 1);
+        EXPECT_EQ(this->blob_top_->num(), 2);
+        EXPECT_EQ(this->blob_top_->channels(), 7);
+        EXPECT_EQ(this->blob_top_->height(), 3);
+        EXPECT_EQ(this->blob_top_->width(), 3);
     }
 
     TYPED_TEST(LRNLayerTest, TestCPU) {
@@ -103,6 +102,17 @@ namespace caffeine {
         }
     }
 
+    TYPED_TEST(LRNLayerTest, TestCPUGradient) {
+        LayerParameter layer_param;
+        LRNLayer<TypeParam> layer(layer_param);
+        Caffeine::set_mode(Caffeine::CPU);
+        // when testing the GPU gradient, let's do a small shape.
+        this->blob_bottom_->Reshape(1, 7, 1, 1);
+        FillerParameter filler_param;
+        GaussianFiller<TypeParam> filler(filler_param);
+        filler.Fill(this->blob_bottom_);
+        GradientChecker<TypeParam> checker(1e-2, 1e-2);
+        checker.CheckGradient(layer, this->blob_bottom_vec_, this->blob_top_vec_);
+    }
+
 }
-
-
