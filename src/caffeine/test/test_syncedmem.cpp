@@ -4,6 +4,8 @@
 
 #include <cuda_runtime.h>
 
+#include "caffeine/test/test_caffeine_main.hpp"
+
 
 namespace caffeine {
 

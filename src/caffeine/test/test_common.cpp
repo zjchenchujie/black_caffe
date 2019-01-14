@@ -7,6 +7,8 @@
 #include <cuda_runtime.h>
 #include <cstring>
 
+#include "caffeine/test/test_caffeine_main.hpp"
+
 namespace caffeine{
 class TestCommon : public ::testing::Test{};
 

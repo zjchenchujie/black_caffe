@@ -10,16 +10,19 @@ NAME := lib$(PROJECT).so
 TEST_NAME := test_$(PROJECT)
 CXX_SRCS := $(shell find caffeine ! -name "test_*.cpp" -name "*.cpp")
 CUDA_SRCS := $(shell find caffeine -name "*.cu")
-TEST_SRCS := $(shell find caffeine/test -name "test_*.cpp") gtest/gtest-all.cpp
+TEST_SRCS := $(shell find caffeine/test -name "test_*.cpp")
+GTEST_SRCS := gtest/gtest-all.cpp
 PROTO_SRCS := $(wildcard caffeine/proto/*.proto)
 PROTO_GEN_HEADER := ${PROTO_SRCS:.proto=.pb.h}
 PROTO_GEN_CC := ${PROTO_SRCS:.proto=.pb.cc}
 PROTO_GEN_PY := ${PROTO_SRCS:.proto=_pb2.py}
 CXX_OBJS := ${CXX_SRCS:.cpp=.o}
-CUDA_OBJS := ${CUDA_SRCS:.cu=.o}
+CUDA_OBJS := ${CUDA_SRCS:.cu=.cuo}
 PROTO_OBJS := ${PROTO_SRCS:.proto=.pb.o}
 OBJS := $(PROTO_OBJS) $(CXX_OBJS) $(CUDA_OBJS)
 TEST_OBJS := ${TEST_SRCS:.cpp=.o}
+GTEST_OBJS := ${GTEST_SRCS:.cpp=.o}
+TEST_BINS := ${TEST_OBJS:.o=.testbin}
 
 CUDA_DIR := /usr/local/cuda
 CUDA_ARCH := -arch=sm_30
@@ -46,26 +49,32 @@ NVCC = nvcc ${CXXFLAGS:-fPIC=-Xcompiler -fPIC} $(CPPFLAGS) $(CUDA_ARCH)
 
 all: $(NAME)
 
-test: $(TEST_NAME)
+test: $(OBJS) $(GTEST_OBJ) $(TEST_BINS)
+
+runtest: test
+	for testbin in $(TEST_BINS); do $$testbin; done
+
+$(TEST_BINS): %.testbin: %.o
+	$(CXX) $< $(OBJS) $(GTEST_OBJS) -o $@ $(LDFLAGS) $(WARNINGS)
 
 linecount: clean
 	cloc --read-lang-def=caffeine.cloc caffeine/
 
-$(TEST_NAME): $(OBJS) $(TEST_OBJS)
-	$(CXX) $(TEST_OBJS) $(OBJS) -o $(TEST_NAME) $(LDFLAGS) $(WARNINGS)
-	./$(TEST_NAME)
+#$(TEST_NAME): $(OBJS) $(TEST_OBJS)
+#	$(CXX) $(TEST_OBJS) $(OBJS) -o $(TEST_NAME) $(LDFLAGS) $(WARNINGS)
+#	./$(TEST_NAME)
 
 $(NAME): $(PROTO_GEN_CC) $(OBJS)
 	$(LINK) -shared $(OBJS) -o $(NAME)
 
-$(CUDA_OBJS): %.o: %.cu
+$(CUDA_OBJS): %.cuo: %.cu
 	$(NVCC) -c $< -o $@
 
 $(PROTO_GEN_CC): $(PROTO_SRCS)
 	protoc $(PROTO_SRCS) --cpp_out=. --python_out=.
 
 clean:
-	$(RM) $(NAME) $(TEST_NAME)
+	$(RM) $(NAME) $(TEST_BINS)
 	$(RM) $(OBJS) $(TEST_OBJS)
 	$(RM) $(PROTO_GEN_HEADER) $(PROTO_GEN_CC) $(PROTO_GEN_PY)
 

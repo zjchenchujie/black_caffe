@@ -14,6 +14,8 @@
 
 #include "gtest/gtest.h"
 
+#include "caffeine/test/test_caffeine_main.hpp"
+
 namespace caffeine{
     extern cudaDeviceProp CAFFEINE_TEST_CUDA_PROP;
 

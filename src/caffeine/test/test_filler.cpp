@@ -8,6 +8,8 @@
 #include "caffeine/filler.hpp"
 #include "gtest/gtest.h"
 
+#include "caffeine/test/test_caffeine_main.hpp"
+
 namespace caffeine {
 
 typedef ::testing::Types<float, double> Dtype;

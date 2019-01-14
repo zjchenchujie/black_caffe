@@ -11,6 +11,8 @@
 #include "caffeine/blob.hpp"
 #include "caffeine/test/test_gradient_check_util.hpp"
 
+#include "caffeine/test/test_caffeine_main.hpp"
+
 namespace caffeine{
     extern cudaDeviceProp CAFFEINE_TEST_CUDA_PROP;
 
