@@ -78,6 +78,7 @@ namespace caffeine {
             DropoutForward<Dtype><<<CAFFEINE_GET_BLOCKS(count), CAFFEINE_CUDA_NUM_THREADS>>>(
                     count, bottom_data, (unsigned int*)(rand_vec_->gpu_data()), uint_thres_, scale_,
                             top_data);
+            CUDA_POST_KERNEL_CHECK;
         } else {
             CUDA_CHECK(cudaMemcpy(top_data, bottom_data,
                                   count * sizeof(Dtype), cudaMemcpyDeviceToDevice));
@@ -108,6 +109,7 @@ namespace caffeine {
             DropoutBackward<Dtype><<<CAFFEINE_GET_BLOCKS(count), CAFFEINE_CUDA_NUM_THREADS>>>(
                     count, top_diff, mask, uint_thres_, scale_,
                             bottom_diff);
+            CUDA_POST_KERNEL_CHECK;
         }
         return Dtype(0);
     }

@@ -116,6 +116,7 @@ namespace caffeine{
             PaddingBackward<Dtype><<<CAFFEINE_GET_BLOCKS(count), CAFFEINE_CUDA_NUM_THREADS>>>(
                     count, top_diff, bottom_diff, NUM_, CHANNEL_, HEIGHT_IN_, WIDTH_IN_,
                             PAD_);
+            CUDA_POST_KERNEL_CHECK;
         }
         return Dtype(0);
     }

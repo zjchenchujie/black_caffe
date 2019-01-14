@@ -134,6 +134,8 @@ namespace caffeine{
     protected:
         virtual void Forward_cpu(const vector<Blob<Dtype>*>& bottom,
                                  vector<Blob<Dtype>*>* top);
+        virtual void Forward_gpu(const vector<Blob<Dtype>*>& bottom,
+                                 vector<Blob<Dtype>*>* top);
         //virtual void Forward_gpu(const vector<Blob<Dtype>*>& bottom,
         //    vector<Blob<Dtype>*>* top);
         virtual Dtype Backward_cpu(const vector<Blob<Dtype>*>& top,

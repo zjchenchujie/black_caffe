@@ -4,6 +4,7 @@
 #include "caffeine/layer.hpp"
 #include "caffeine/vision_layers.hpp"
 #include "caffeine/util/im2col.hpp"
+#include "caffeine/common.hpp"
 
 namespace caffeine{
     template <typename Dtype>
@@ -28,6 +29,17 @@ namespace caffeine{
         for(int n = 0; n < bottom[0]->num(); ++n){
             im2col_cpu(bottom_data + bottom[0]->offset(n),
                     CHANNELS_, HEIGHT_, WIDTH_, KSIZE_, STRIDE_, top_data + (*top)[0]->offset(n));
+        }
+    }
+
+    template <typename Dtype>
+    void Im2colLayer<Dtype>::Forward_gpu(const vector<caffeine::Blob<Dtype> *> &bottom,
+                                         vector<caffeine::Blob<Dtype> *> *top) {
+        const Dtype* bottom_data = bottom[0]->gpu_data();
+        Dtype* top_data = (*top)[0]->mutable_gpu_data();
+        for(int n = 0; n < bottom[0]->num(); ++n){
+            im2col_gpu(bottom_data + bottom[0]->offset(n), CHANNELS_, HEIGHT_,
+                       WIDTH_, KSIZE_, STRIDE_, top_data + (*top)[0]->offset(n));
         }
     }
 
