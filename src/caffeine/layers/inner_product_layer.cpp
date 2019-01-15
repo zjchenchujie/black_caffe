@@ -15,7 +15,7 @@ namespace caffeine{
         CHECK_EQ(bottom.size(), 1) << "IP Layer takes a single blob as input.";
         CHECK_EQ(top->size(), 1) << "IP Layer takes a single blob as output. ";
         const int num_output = this->layer_param_.num_output();
-        biasterm_ = this->layer_param_.bias_term();
+        biasterm_ = this->layer_param_.biasterm();
         // Figure out the dimemsions
         M_ = bottom[0]->num();
         K_ = bottom[0]->count() / bottom[0]->num();
@@ -28,7 +28,7 @@ namespace caffeine{
             this->blobs_.resize(1);
         }
         // Intialize the weight
-        this->blobs_[0].Reshape(1, 1, K_, N_);
+        this->blobs_[0].Reshape(1, 1, N_, K_);
         // fill the weights
         shared_ptr<Filler<Dtype> > weight_filler(
                 GetFiller<Dtype>(this->layer_param_.weight_filler()));
@@ -69,7 +69,7 @@ namespace caffeine{
                                                  vector<Blob<Dtype>*>* bottom) {
         const Dtype* top_diff = top[0]->cpu_diff();
         const Dtype* bottom_data = (*bottom)[0]->cpu_data();
-        caffeine_cpu_gemm(CblasNoTrans, CblasNoTrans, K_, N_, M_, (Dtype)1.,
+        caffeine_cpu_gemm(CblasTrans, CblasNoTrans, K_, N_, M_, (Dtype)1.,
                 bottom_data, top_diff, (Dtype)0., this->blobs_[0].mutable_cpu_diff());
         if (biasterm_) {
             // Gradient with respect to bias

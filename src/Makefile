@@ -49,7 +49,7 @@ NVCC = nvcc ${CXXFLAGS:-fPIC=-Xcompiler -fPIC} $(CPPFLAGS) $(CUDA_ARCH)
 
 all: $(NAME)
 
-test: $(OBJS) $(GTEST_OBJ) $(TEST_BINS)
+test: $(OBJS) $(GTEST_OBJS) $(TEST_BINS)
 
 runtest: test
 	for testbin in $(TEST_BINS); do $$testbin; done

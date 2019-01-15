@@ -25,7 +25,7 @@ message LayerParameter{
     required string type = 2; // the string to specify the layer type
 
     optional uint32 num_output = 3;
-    optional bool bias_term = 4 [default = true];
+    optional bool biasterm = 4 [default = true];
     optional FillerParameter weight_filler = 5;
     optional FillerParameter bias_filler = 6;
 
