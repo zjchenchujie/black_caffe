@@ -56,7 +56,7 @@ public:
 
     void Update();
     void FromPorto(const BlobProto& proto);
-    void ToProto(BlobProto* proto);
+    void ToProto(BlobProto* proto, bool write_diff);
 
 private:
     shared_ptr<SyncedMemory> data_;

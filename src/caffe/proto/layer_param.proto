@@ -11,6 +11,11 @@ message BlobProto{
 
 }
 
+message Datum{
+    optional BlobProto blob = 1;
+    optional int32 label = 2;
+}
+
 message FillerParameter{
     optional string type = 1 [default = "gaussian"];
     optional float value = 2 [default = 0]; // the value in constant filler
@@ -55,4 +60,6 @@ message LayerConnection{
 message NetParameter{
     optional string name = 1;
     repeated LayerConnection layers = 2;
+    repeated string bottom = 3;
+    repeated string top = 4;
 }
