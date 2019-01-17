@@ -17,14 +17,14 @@ template <typename Dtype>
 class Blob{
 public:
     Blob()
-        :num_(0), channels_(0), height_(0), width_(0), count_(0), data_(), diff_() {};
+        :num_(0), channels_(0), height_(0), width_(0), count_(0), data_(), diff_() {}
     explicit Blob(const int num, const int channels, const int height, const int width);
     Blob(const Blob<Dtype>& source);
 
     ~Blob(){
 //        delete data_;
 //        delete diff_;
-    };
+    }
     void Reshape(const int num, const int channels, const int height, const int width);
     inline int num() const { return num_; }
     inline int channels() const { return channels_; }

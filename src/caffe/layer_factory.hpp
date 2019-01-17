@@ -9,6 +9,8 @@
 #include "caffe/vision_layers.hpp"
 #include "proto/layer_param.pb.h"
 
+#include <string>
+
 namespace caffe {
 
     template <typename Dtype>

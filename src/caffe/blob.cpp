@@ -68,25 +68,25 @@ const Dtype* Blob<Dtype>::gpu_diff() const {
 template <typename Dtype>
 Dtype* Blob<Dtype>::mutable_cpu_data(){
     CHECK(data_);
-    return (Dtype*)data_->mutable_cpu_data();
+    return reinterpret_cast<Dtype*>(data_->mutable_cpu_data());
 }
 
 template <typename Dtype>
 Dtype* Blob<Dtype>::mutable_gpu_data(){
     CHECK(data_);
-    return (Dtype*)data_->mutable_gpu_data();
+    return reinterpret_cast<Dtype*>(data_->mutable_gpu_data());
 }
 
 template <typename Dtype>
 Dtype* Blob<Dtype>::mutable_cpu_diff(){
     CHECK(diff_);
-    return (Dtype*)diff_->mutable_cpu_data();
+    return reinterpret_cast<Dtype*>(diff_->mutable_cpu_data());
 }
 
 template <typename Dtype>
 Dtype* Blob<Dtype>::mutable_gpu_diff(){
     CHECK(diff_);
-    return (Dtype*)diff_->mutable_gpu_data();
+    return reinterpret_cast<Dtype*>(diff_->mutable_gpu_data());
 }
 
 template <typename Dtype>

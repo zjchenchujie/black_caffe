@@ -9,6 +9,8 @@
 #define BLACK_CAFFE_FILLER_HPP
 
 #include <mkl.h>
+#include <string>
+#include "caffe/util/math_functions.hpp"
 #include "caffe/common.hpp"
 #include "caffe/proto/layer_param.pb.h"
 #include "caffe/blob.hpp"
@@ -18,9 +20,9 @@ namespace caffe{
 template <typename Dtype>
 class Filler {
 public:
-    Filler(const FillerParameter& param)
+    explicit Filler(const FillerParameter& param)
     :filler_param_(param){};
-    ~Filler(){};
+    virtual ~Filler(){};
     virtual void Fill(Blob<Dtype>* blob) = 0;
 protected:
     FillerParameter filler_param_;
@@ -29,7 +31,7 @@ protected:
 template <typename Dtype>
 class ConstantFiller : public Filler<Dtype>{
 public:
-    ConstantFiller(const FillerParameter& param)
+    explicit ConstantFiller(const FillerParameter& param)
     :Filler<Dtype>(param){};
     virtual void Fill(Blob<Dtype>* blob){
         Dtype* data = blob->mutable_cpu_data();
@@ -45,53 +47,26 @@ public:
 template <typename Dtype>
 class UniformFiller : public Filler<Dtype>{
 public:
-    UniformFiller(const FillerParameter& param)
+    explicit UniformFiller(const FillerParameter& param)
     :Filler<Dtype>(param){};
     virtual void Fill(Blob<Dtype>* blob){
-        Dtype* data = blob->mutable_cpu_data();
-        const int count = blob->count();
-        const Dtype value = this->filler_param_.value();
-        CHECK(count);
-        switch(sizeof(Dtype)) {
-            case sizeof(float):
-                VSL_CHECK(vsRngUniform(VSL_RNG_METHOD_UNIFORM_STD, Caffe::vsl_stream(),
-                                       count, (float*)data, this->filler_param_.min(),
-                                       this->filler_param_.max()));
-                break;
-            case sizeof(double):
-                VSL_CHECK(vdRngUniform(VSL_RNG_METHOD_UNIFORM_STD, Caffe::vsl_stream(),
-                                       count, (double*)data, this->filler_param_.min(), this->filler_param_.max()));
-                break;
-            default:
-                CHECK(false) << "Unknown dtype. ";
-        }
+        DCHECK(blob->count());
+        caffe_vRngUniform<Dtype>(blob->count(), blob->mutable_cpu_data(),
+                Dtype(this->filler_param_.min()),
+                Dtype(this->filler_param_.max()));
     }
 }; // class UniformFiller
 
 template <typename Dtype>
 class GaussianFiller : public Filler<Dtype>{
 public:
-    GaussianFiller(const FillerParameter& param)
+    explicit GaussianFiller(const FillerParameter& param)
     :Filler<Dtype>(param){};
     virtual void Fill(Blob<Dtype>* blob){
-        Dtype* data = blob->mutable_cpu_data();
-        const int count = blob->count();
-        const Dtype value = this->filler_param_.value();
-        CHECK(count);
-        switch(sizeof(Dtype)){
-            case sizeof(float):
-                VSL_CHECK(vsRngGaussian(VSL_RNG_METHOD_GAUSSIAN_BOXMULLER,
-                                        Caffe::vsl_stream(), count, (float*)data,
-                                        this->filler_param_.mean(), this->filler_param_.std()));
-                break;
-            case sizeof(double):
-                VSL_CHECK(vdRngGaussian(VSL_RNG_METHOD_GAUSSIAN_BOXMULLER,
-                                        Caffe::vsl_stream(), count, (double*)data,
-                                        this->filler_param_.mean(), this->filler_param_.std()));
-                break;
-            default:
-                CHECK(false) << "Unknown dtype.";
-        } //switch
+        CHECK(blob->count());
+        caffe_vRngGaussian<Dtype>(blob->count(), blob->mutable_cpu_data(),
+                Dtype(this->filler_param_.mean()),
+                Dtype(this->filler_param_.std()));
     } // func Fill
 }; // class GaussianFiller
 

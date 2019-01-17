@@ -58,6 +58,13 @@ namespace caffe {
     template <typename Dtype>
     void caffe_powx(const int n, const Dtype* a, const Dtype b, Dtype* y);
 
+    template <typename Dtype>
+    void caffe_vRngUniform(const int n, Dtype* r, const Dtype a, const Dtype b);
+
+    template <typename Dtype>
+    void caffe_vRngGaussian(const int n, Dtype* r, const Dtype a,
+                            const Dtype sigma);
+
 
 }  // namespace caffe
 
