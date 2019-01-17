@@ -115,6 +115,16 @@ namespace caffe{
     }
 
     template <>
+    void caffe_scal<float>(const int N, const float alpha, float* X){
+        cblas_sscal(N, alpha, X, 1);
+    }
+
+    template <>
+    void caffe_scal<double>(const int N, const double alpha, double* X){
+        cblas_dscal(N, alpha, X, 1);
+    }
+
+    template <>
     void caffe_sqr<float>(const int n, const float* a, float* y){
         vsSqr(n, a, y);
     }

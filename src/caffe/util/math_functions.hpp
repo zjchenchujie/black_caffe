@@ -44,6 +44,9 @@ namespace caffe {
     void caffe_copy(const int N, const Dtype *X, Dtype *Y);
 
     template <typename Dtype>
+    void caffe_scal(const int N, const Dtype alpha, Dtype* X);
+
+    template <typename Dtype>
     void caffe_sqr(const int N, const Dtype* a, Dtype* y);
 
     template <typename Dtype>

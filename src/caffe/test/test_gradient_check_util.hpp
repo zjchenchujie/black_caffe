@@ -102,10 +102,10 @@ namespace caffe {
                     // the scale factor by 1.
                     Dtype scale = std::max(std::max(fabs(computed_gradient), fabs(estimated_gradient)),
                                       1.);
-                    EXPECT_GT(computed_gradient, estimated_gradient - threshold_ * scale);
-                    EXPECT_LT(computed_gradient, estimated_gradient + threshold_ * scale);
-//                    EXPECT_GT(computed_gradient, estimated_gradient - threshold_);
-//                    EXPECT_LT(computed_gradient, estimated_gradient + threshold_);
+                    EXPECT_GT(computed_gradient, estimated_gradient - threshold_ * scale)
+                    << "debug: (blob_id, feat_id)=" << blobid << "," << feat_id;
+                    EXPECT_LT(computed_gradient, estimated_gradient + threshold_ * scale)
+                    << "debug: (blob_id, feat_id)=" << blobid << "," << feat_id;
                 }
                 //LOG(ERROR) << "Feature: " << current_blob->cpu_data()[feat_id];
                 //LOG(ERROR) << "computed gradient: " << computed_gradient
