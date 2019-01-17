@@ -1,6 +1,6 @@
 #include <mkl.h>
 #include <cublas_v2.h>
-
+#include <vector>
 #include "caffe/blob.hpp"
 #include "caffe/common.hpp"
 #include "caffe/filler.hpp"

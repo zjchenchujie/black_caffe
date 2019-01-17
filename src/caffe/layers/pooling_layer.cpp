@@ -6,6 +6,7 @@
 #include "caffe/layer.hpp"
 #include <cfloat>
 #include <algorithm>
+#include <vector>
 
 using std::min;
 using std::max;
