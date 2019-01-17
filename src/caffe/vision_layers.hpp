@@ -6,6 +6,7 @@
 #define BLACK_CAFFE_VISION_LAYERS_HPP
 #include "caffe/layer.hpp"
 #include "caffe/filler.hpp"
+#include <leveldb/db.h>
 
 namespace caffe{
 
@@ -189,7 +190,6 @@ namespace caffe{
             const bool propagate_down, vector<Blob<Dtype>*>* bottom);
         Blob<Dtype> col_bob_;
 
-    protected:
         int KSIZE_;
         int STRIDE_;
         int NUM_;
@@ -204,6 +204,26 @@ namespace caffe{
         int M_;
         int K_;
         int N_;
+    };
+
+    template <typename Dtype>
+    class DataLayer : public Layer<Dtype>{
+    public:
+        explicit DataLayer<Dtype>(const LayerParameter &param)
+                :Layer<Dtype>(param){};
+        virtual void SetUp(const vector<Blob<Dtype>* > &bottom, vector<Blob<Dtype>* > *top);
+
+    protected:
+        virtual void Forward_cpu(const vector<Blob<Dtype>* > &bottom, vector<Blob<Dtype>* > *top);
+        virtual void Forward_gpu(const vector<Blob<Dtype>* > &bottom, vector<Blob<Dtype>* > *top);
+        virtual Dtype Backward_cpu(const vector<Blob<Dtype>*>& top,
+                                   const bool propagate_down, vector<Blob<Dtype>*>* bottom);
+        virtual Dtype Backward_gpu(const vector<Blob<Dtype>*>& top,
+                                   const bool propagate_down, vector<Blob<Dtype>*>* bottom);
+
+        shared_ptr<leveldb::DB> db_;
+        shared_ptr<leveldb::Iterator> iter_;
+        int datum_size_;
     };
 
 

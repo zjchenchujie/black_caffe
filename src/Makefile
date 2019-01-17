@@ -35,7 +35,7 @@ MKL_LIB_DIR := $(MKL_DIR)/lib $(MKL_DIR)/lib/intel64
 
 INCLUDE_DIRS := . $(CUDA_INCLUDE_DIR) $(MKL_INCLUDE_DIR)
 LIBRARY_DIRS := . $(CUDA_LIB_DIR) $(MKL_LIB_DIR)
-LIBRARIES := cuda cudart cublas protobuf pthread glog mkl_rt mkl_intel_thread curand
+LIBRARIES := cuda cudart cublas protobuf pthread glog mkl_rt mkl_intel_thread curand leveldb snappy
 WARNINGS := -Wall
 
 CXXFLAGS +=   -fPIC $(foreach includedir,$(INCLUDE_DIRS),-I$(includedir))

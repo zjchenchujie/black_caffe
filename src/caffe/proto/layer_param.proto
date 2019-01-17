@@ -49,6 +49,14 @@ message LayerParameter{
     optional float alpha = 14 [default = 1.]; // for local response norm
     optional float beta = 15 [default = 0.75];
 
+    // For data layers, specify the data source
+    optional string source = 16;
+    // For data layers, specify the batch size.
+    optional uint32 batchsize = 17;
+
+    // The blobs containing the numeric parameters of the layer
+    repeated BlobProto blobs = 50;
+
 }
 
 message LayerConnection{
