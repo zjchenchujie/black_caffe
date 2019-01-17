@@ -72,12 +72,12 @@ namespace caffe {
         // We will launch one kernel for each pixel location, and have the kernel
         // go through all the channels.
         int n_threads = num_ * height_ * width_;
-        LRNFillScale<<<caffe_GET_BLOCKS(n_threads), caffe_CUDA_NUM_THREADS>>>(
+        LRNFillScale<<<CAFFE_GET_BLOCKS(n_threads), CAFFE_CUDA_NUM_THREADS>>>(
                 n_threads, bottom_data, num_, channels_, height_, width_, size_,
                         alpha_ / size_, scale_data);
         CUDA_POST_KERNEL_CHECK;
         n_threads = bottom[0]->count();
-        LRNComputeOutput<<<caffe_GET_BLOCKS(n_threads), caffe_CUDA_NUM_THREADS>>>(
+        LRNComputeOutput<<<CAFFE_GET_BLOCKS(n_threads), CAFFE_CUDA_NUM_THREADS>>>(
                 n_threads, bottom_data, scale_data, -beta_, top_data);
         CUDA_POST_KERNEL_CHECK;
     }
@@ -149,7 +149,7 @@ namespace caffe {
     Dtype LRNLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
                                         const bool propagate_down, vector<Blob<Dtype>*>* bottom) {
         int n_threads = num_ * height_ * width_;
-        LRNComputeDiff<<<caffe_GET_BLOCKS(n_threads), caffe_CUDA_NUM_THREADS>>>(
+        LRNComputeDiff<<<CAFFE_GET_BLOCKS(n_threads), CAFFE_CUDA_NUM_THREADS>>>(
                 n_threads, (*bottom)[0]->gpu_data(), top[0]->gpu_data(),
                         scale_.gpu_data(), top[0]->gpu_diff(), num_, channels_, height_, width_,
                         size_, -beta_, Dtype(2. * alpha_ * beta_ / size_),

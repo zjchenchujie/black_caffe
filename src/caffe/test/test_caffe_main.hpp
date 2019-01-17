@@ -15,7 +15,7 @@
 
 namespace caffe {
 
-    cudaDeviceProp caffe_TEST_CUDA_PROP;
+    cudaDeviceProp CAFFE_TEST_CUDA_PROP;
 
 }  // namespace caffe
 
@@ -37,7 +37,7 @@ int main(int argc, char** argv) {
     }
     cudaGetDevice(&device);
     cout << "Current device id: " << device << endl;
-    cudaGetDeviceProperties(&caffe_TEST_CUDA_PROP, device);
+    cudaGetDeviceProperties(&CAFFE_TEST_CUDA_PROP, device);
     // invoke the test.
     return RUN_ALL_TESTS();
 }

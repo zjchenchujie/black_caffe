@@ -55,7 +55,7 @@ protected:
         layer_param.set_kernelsize(3);
         layer_param.set_stride(2);
         Im2colLayer<TypeParam> layer(layer_param);
-        caffe::set_mode(caffe::CPU);
+        Caffe::set_mode(Caffe::CPU);
         layer.SetUp(this->blob_bottom_vec_, &(this->blob_top_vec_));
         layer.Forward(this->blob_bottom_vec_, &(this->blob_top_vec_));
         // We are lazy and will only check the top left block
@@ -71,7 +71,7 @@ protected:
         layer_param.set_kernelsize(3);
         layer_param.set_stride(2);
         Im2colLayer<TypeParam> layer(layer_param);
-        caffe::set_mode(caffe::GPU);
+        Caffe::set_mode(Caffe::GPU);
         layer.SetUp(this->blob_bottom_vec_, &(this->blob_top_vec_));
         layer.Forward(this->blob_bottom_vec_, &(this->blob_top_vec_));
         // We are lazy and will only check the top left block
@@ -86,7 +86,7 @@ protected:
         LayerParameter layer_param;
         layer_param.set_kernelsize(3);
         layer_param.set_stride(2);
-        caffe::set_mode(caffe::CPU);
+        Caffe::set_mode(Caffe::CPU);
         Im2colLayer<TypeParam> layer(layer_param);
         GradientChecker<TypeParam> checker(1e-2, 1e-2);
         checker.CheckGradientExhaustive(layer, this->blob_bottom_vec_, this->blob_top_vec_);

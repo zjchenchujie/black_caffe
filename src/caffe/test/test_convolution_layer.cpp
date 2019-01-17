@@ -81,7 +81,7 @@ namespace caffe {
         shared_ptr<Layer<TypeParam> > layer(
                 new ConvolutionLayer<TypeParam>(layer_param));
         layer->SetUp(this->blob_bottom_vec_, &(this->blob_top_vec_));
-        caffe::set_mode(caffe::CPU);
+        Caffe::set_mode(Caffe::CPU);
         layer->Forward(this->blob_bottom_vec_, &(this->blob_top_vec_));
         // After the convolution, the output should all have output values 27.1
         const TypeParam* top_data = this->blob_top_->cpu_data();
@@ -90,7 +90,7 @@ namespace caffe {
             EXPECT_LE(top_data[i], 27.1 + 1e-4);
         }
         // Test GPU
-        caffe::set_mode(caffe::GPU);
+        Caffe::set_mode(Caffe::GPU);
         layer->Forward(this->blob_bottom_vec_, &(this->blob_top_vec_));
         // After the convolution, the output should all have output values 27.1
         top_data = this->blob_top_->cpu_data();
@@ -118,7 +118,7 @@ namespace caffe {
         shared_ptr<Layer<TypeParam> > layer(
                 new ConvolutionLayer<TypeParam>(layer_param));
         layer->SetUp(this->blob_bottom_vec_, &(this->blob_top_vec_));
-        caffe::set_mode(caffe::CPU);
+        Caffe::set_mode(Caffe::CPU);
         layer->Forward(this->blob_bottom_vec_, &(this->blob_top_vec_));
         // After the convolution, the output should all have output values 9.1
         const TypeParam* top_data = this->blob_top_->cpu_data();
@@ -127,7 +127,7 @@ namespace caffe {
             EXPECT_LE(top_data[i], 9.1 + 1e-4);
         }
         // Test GPU
-        caffe::set_mode(caffe::GPU);
+        Caffe::set_mode(Caffe::GPU);
         layer->Forward(this->blob_bottom_vec_, &(this->blob_top_vec_));
         // After the convolution, the output should all have output values 9.1
         top_data = this->blob_top_->cpu_data();
@@ -143,7 +143,7 @@ namespace caffe {
         layer_param.set_kernelsize(3);
         layer_param.set_stride(2);
         layer_param.set_num_output(2);
-        caffe::set_mode(caffe::CPU);
+        Caffe::set_mode(Caffe::CPU);
         ConvolutionLayer<TypeParam> layer(layer_param);
         GradientChecker<TypeParam> checker(1e-2, 1e-2);
         checker.CheckGradientExhaustive(layer, this->blob_bottom_vec_, this->blob_top_vec_);
@@ -154,7 +154,7 @@ namespace caffe {
         layer_param.set_kernelsize(3);
         layer_param.set_stride(2);
         layer_param.set_num_output(2);
-        caffe::set_mode(caffe::GPU);
+        Caffe::set_mode(Caffe::GPU);
         ConvolutionLayer<TypeParam> layer(layer_param);
         GradientChecker<TypeParam> checker(1e-2, 1e-2);
         checker.CheckGradientExhaustive(layer, this->blob_bottom_vec_, this->blob_top_vec_);

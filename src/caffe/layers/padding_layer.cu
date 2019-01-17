@@ -80,7 +80,7 @@ namespace caffe{
         const int count = bottom[0]->count();
         // First, set all data to be zero for the boundary pixels
         CUDA_CHECK(cudaMemset(top_data, 0, sizeof(Dtype) * (*top)[0]->count()));
-        PaddingForward<Dtype><<<caffe_GET_BLOCKS(count), caffe_CUDA_NUM_THREADS>>>(
+        PaddingForward<Dtype><<<CAFFE_GET_BLOCKS(count), CAFFE_CUDA_NUM_THREADS>>>(
                 count, bottom_data, top_data, NUM_, CHANNEL_, HEIGHT_IN_, WIDTH_IN_,
                         PAD_);
         CUDA_POST_KERNEL_CHECK;
@@ -113,7 +113,7 @@ namespace caffe{
             const Dtype* top_diff = top[0]->gpu_diff();
             Dtype* bottom_diff = (*bottom)[0]->mutable_gpu_diff();
             const int count = (*bottom)[0]->count();
-            PaddingBackward<Dtype><<<caffe_GET_BLOCKS(count), caffe_CUDA_NUM_THREADS>>>(
+            PaddingBackward<Dtype><<<CAFFE_GET_BLOCKS(count), CAFFE_CUDA_NUM_THREADS>>>(
                     count, top_diff, bottom_diff, NUM_, CHANNEL_, HEIGHT_IN_, WIDTH_IN_,
                             PAD_);
             CUDA_POST_KERNEL_CHECK;

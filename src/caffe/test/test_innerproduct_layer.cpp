@@ -12,7 +12,7 @@
 
 namespace caffe {
 
-    extern cudaDeviceProp caffe_TEST_CUDA_PROP;
+    extern cudaDeviceProp CAFFE_TEST_CUDA_PROP;
 
     template <typename Dtype>
     class InnerProductLayerTest : public ::testing::Test {
@@ -51,7 +51,7 @@ namespace caffe {
 
     TYPED_TEST(InnerProductLayerTest, TestCPU) {
         LayerParameter layer_param;
-        caffe::set_mode(caffe::CPU);
+        Caffe::set_mode(Caffe::CPU);
         layer_param.set_num_output(10);
         layer_param.mutable_weight_filler()->set_type("uniform");
         layer_param.mutable_bias_filler()->set_type("uniform");
@@ -69,9 +69,9 @@ namespace caffe {
     }
 
     TYPED_TEST(InnerProductLayerTest, TestGPU) {
-        if (sizeof(TypeParam) == 4 || caffe_TEST_CUDA_PROP.major >= 2) {
+        if (sizeof(TypeParam) == 4 || CAFFE_TEST_CUDA_PROP.major >= 2) {
             LayerParameter layer_param;
-            caffe::set_mode(caffe::GPU);
+            Caffe::set_mode(Caffe::GPU);
             layer_param.set_num_output(10);
             layer_param.mutable_weight_filler()->set_type("uniform");
             layer_param.mutable_bias_filler()->set_type("uniform");
@@ -93,7 +93,7 @@ namespace caffe {
 
     TYPED_TEST(InnerProductLayerTest, TestCPUGradient) {
         LayerParameter layer_param;
-        caffe::set_mode(caffe::CPU);
+        Caffe::set_mode(Caffe::CPU);
         layer_param.set_num_output(10);
         layer_param.mutable_weight_filler()->set_type("uniform");
         layer_param.mutable_bias_filler()->set_type("uniform");
@@ -105,9 +105,9 @@ namespace caffe {
     }
 
     TYPED_TEST(InnerProductLayerTest, TestGPUGradient) {
-        if (sizeof(TypeParam) == 4 || caffe_TEST_CUDA_PROP.major >= 2) {
+        if (sizeof(TypeParam) == 4 || CAFFE_TEST_CUDA_PROP.major >= 2) {
             LayerParameter layer_param;
-            caffe::set_mode(caffe::GPU);
+            Caffe::set_mode(Caffe::GPU);
             layer_param.set_num_output(10);
             layer_param.mutable_weight_filler()->set_type("uniform");
             layer_param.mutable_bias_filler()->set_type("uniform");

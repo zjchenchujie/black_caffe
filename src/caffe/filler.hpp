@@ -54,12 +54,12 @@ public:
         CHECK(count);
         switch(sizeof(Dtype)) {
             case sizeof(float):
-                VSL_CHECK(vsRngUniform(VSL_RNG_METHOD_UNIFORM_STD, caffe::vsl_stream(),
+                VSL_CHECK(vsRngUniform(VSL_RNG_METHOD_UNIFORM_STD, Caffe::vsl_stream(),
                                        count, (float*)data, this->filler_param_.min(),
                                        this->filler_param_.max()));
                 break;
             case sizeof(double):
-                VSL_CHECK(vdRngUniform(VSL_RNG_METHOD_UNIFORM_STD, caffe::vsl_stream(),
+                VSL_CHECK(vdRngUniform(VSL_RNG_METHOD_UNIFORM_STD, Caffe::vsl_stream(),
                                        count, (double*)data, this->filler_param_.min(), this->filler_param_.max()));
                 break;
             default:
@@ -81,12 +81,12 @@ public:
         switch(sizeof(Dtype)){
             case sizeof(float):
                 VSL_CHECK(vsRngGaussian(VSL_RNG_METHOD_GAUSSIAN_BOXMULLER,
-                                        caffe::vsl_stream(), count, (float*)data,
+                                        Caffe::vsl_stream(), count, (float*)data,
                                         this->filler_param_.mean(), this->filler_param_.std()));
                 break;
             case sizeof(double):
                 VSL_CHECK(vdRngGaussian(VSL_RNG_METHOD_GAUSSIAN_BOXMULLER,
-                                        caffe::vsl_stream(), count, (double*)data,
+                                        Caffe::vsl_stream(), count, (double*)data,
                                         this->filler_param_.mean(), this->filler_param_.std()));
                 break;
             default:

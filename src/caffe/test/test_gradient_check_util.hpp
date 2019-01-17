@@ -72,7 +72,7 @@ namespace caffe {
 //             go through the values
             for (int feat_id = 0; feat_id < current_blob->count(); ++feat_id) {
                 // First, obtain the original data
-                caffe::set_random_seed(seed_);
+                Caffe::set_random_seed(seed_);
                 layer.Forward(bottom, &top);
                 Dtype computed_objective = GetObjAndGradient(top, top_id, top_data_id);
                 // Get any additional loss from the layer
@@ -80,13 +80,13 @@ namespace caffe {
                 Dtype computed_gradient = current_blob->cpu_diff()[feat_id];
                 // compute score by adding stepsize
                 current_blob->mutable_cpu_data()[feat_id] += stepsize_;
-                caffe::set_random_seed(seed_);
+                Caffe::set_random_seed(seed_);
                 layer.Forward(bottom, &top);
                 Dtype positive_objective = GetObjAndGradient(top, top_id, top_data_id);
                 positive_objective += layer.Backward(top, true, &bottom);
                 // compute score by subtracting stepsize
                 current_blob->mutable_cpu_data()[feat_id] -= stepsize_ * 2;
-                caffe::set_random_seed(seed_);
+                Caffe::set_random_seed(seed_);
                 layer.Forward(bottom, &top);
                 Dtype negative_objective = GetObjAndGradient(top, top_id, top_data_id);
                 negative_objective += layer.Backward(top, true, &bottom);

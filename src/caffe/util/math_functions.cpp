@@ -42,7 +42,7 @@ namespace caffe{
                 (TransA == CblasNoTrans) ? CUBLAS_OP_N : CUBLAS_OP_T;
         cublasOperation_t cuTransB =
                 (TransB == CblasNoTrans) ? CUBLAS_OP_N : CUBLAS_OP_T;
-        CUBLAS_CHECK(cublasSgemm(caffe::cublas_handle(), cuTransB, cuTransA,
+        CUBLAS_CHECK(cublasSgemm(Caffe::cublas_handle(), cuTransB, cuTransA,
                                  N, M, K, &alpha, B, ldb, A, lda, &beta, C, N));
     }
 
@@ -58,7 +58,7 @@ namespace caffe{
                 (TransA == CblasNoTrans) ? CUBLAS_OP_N : CUBLAS_OP_T;
         cublasOperation_t cuTransB =
                 (TransB == CblasNoTrans) ? CUBLAS_OP_N : CUBLAS_OP_T;
-        CUBLAS_CHECK(cublasDgemm(caffe::cublas_handle(), cuTransB, cuTransA,
+        CUBLAS_CHECK(cublasDgemm(Caffe::cublas_handle(), cuTransB, cuTransA,
                                  N, M, K, &alpha, B, ldb, A, lda, &beta, C, N));
     }
 
@@ -82,7 +82,7 @@ namespace caffe{
                                const float beta, float* y) {
         cublasOperation_t cuTransA =
                 (TransA == CblasNoTrans) ? CUBLAS_OP_T : CUBLAS_OP_N;
-        CUBLAS_CHECK(cublasSgemv(caffe::cublas_handle(), cuTransA, N, M, &alpha,
+        CUBLAS_CHECK(cublasSgemv(Caffe::cublas_handle(), cuTransA, N, M, &alpha,
                                  A, N, x, 1, &beta, y, 1));
     }
 
@@ -92,7 +92,7 @@ namespace caffe{
                                 const double beta, double* y) {
         cublasOperation_t cuTransA =
                 (TransA == CblasNoTrans) ? CUBLAS_OP_T : CUBLAS_OP_N;
-        CUBLAS_CHECK(cublasDgemv(caffe::cublas_handle(), cuTransA, N, M, &alpha,
+        CUBLAS_CHECK(cublasDgemv(Caffe::cublas_handle(), cuTransA, N, M, &alpha,
                                  A, N, x, 1, &beta, y, 1));
     }
 

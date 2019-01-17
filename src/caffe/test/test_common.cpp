@@ -16,16 +16,16 @@ TEST_F(TestCommon, TestCublasHandler){
     int cuda_device_id;
     CUDA_CHECK(cudaGetDevice(&cuda_device_id));
     LOG(INFO) << "Cuda device id: " << cuda_device_id;
-    EXPECT_TRUE(caffe::cublas_handle());
+    EXPECT_TRUE(Caffe::cublas_handle());
 }
 
 TEST_F(TestCommon, TestVslStream) {
-        EXPECT_TRUE(caffe::vsl_stream());
+        EXPECT_TRUE(Caffe::vsl_stream());
     }
 
 TEST_F(TestCommon, TestBresMode){
-    EXPECT_EQ(caffe::CPU, caffe::mode());
-    caffe::set_mode(caffe::GPU);
-    EXPECT_EQ(caffe::GPU, caffe::mode());
+    EXPECT_EQ(Caffe::CPU, Caffe::mode());
+    Caffe::set_mode(Caffe::GPU);
+    EXPECT_EQ(Caffe::GPU, Caffe::mode());
 }
 }// namespace caffe

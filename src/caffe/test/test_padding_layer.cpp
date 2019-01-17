@@ -15,7 +15,7 @@
 
 namespace caffe{
 
-    extern cudaDeviceProp caffe_TEST_CUDA_PROP;
+    extern cudaDeviceProp CAFFE_TEST_CUDA_PROP;
 
     template<typename Dtype>
 class PaddingLayerTest : public ::testing::Test{
@@ -45,10 +45,10 @@ protected:
     TYPED_TEST_CASE(PaddingLayerTest, Dtypes);
 
     TYPED_TEST(PaddingLayerTest, TestCPU) {
-        if(caffe_TEST_CUDA_PROP.major >=2){
+        if(CAFFE_TEST_CUDA_PROP.major >=2){
             LayerParameter layer_param;
             layer_param.set_pad(1);
-            caffe::set_mode(caffe::CPU);
+            Caffe::set_mode(Caffe::CPU);
             PaddingLayer<TypeParam> layer(layer_param);
             layer.SetUp(this->blob_bottom_vec_, &(this->blob_top_vec_));
             layer.Forward(this->blob_bottom_vec_, &(this->blob_top_vec_));
@@ -74,17 +74,17 @@ protected:
     TYPED_TEST(PaddingLayerTest, TestCPUGrad) {
         LayerParameter layer_param;
         layer_param.set_pad(1);
-        caffe::set_mode(caffe::CPU);
+        Caffe::set_mode(Caffe::CPU);
         PaddingLayer<TypeParam> layer(layer_param);
         GradientChecker<TypeParam> checker(1e-2, 1e-3);
         checker.CheckGradientExhaustive(layer, this->blob_bottom_vec_, this->blob_top_vec_);
     }
 
     TYPED_TEST(PaddingLayerTest, TestGPU) {
-        if(caffe_TEST_CUDA_PROP.major >= 2){
+        if(CAFFE_TEST_CUDA_PROP.major >= 2){
             LayerParameter layer_param;
             layer_param.set_pad(1);
-            caffe::set_mode(caffe::GPU);
+            Caffe::set_mode(Caffe::GPU);
             PaddingLayer<TypeParam> layer(layer_param);
             layer.SetUp(this->blob_bottom_vec_, &(this->blob_top_vec_));
             layer.Forward(this->blob_bottom_vec_, &(this->blob_top_vec_));
@@ -108,10 +108,10 @@ protected:
     }
 
     TYPED_TEST(PaddingLayerTest, TestGPUGrad) {
-        if(caffe_TEST_CUDA_PROP.major >= 2){
+        if(CAFFE_TEST_CUDA_PROP.major >= 2){
             LayerParameter layer_param;
             layer_param.set_pad(1);
-            caffe::set_mode(caffe::GPU);
+            Caffe::set_mode(Caffe::GPU);
             PaddingLayer<TypeParam> layer(layer_param);
             GradientChecker<TypeParam> checker(1e-2, 1e-3);
             checker.CheckGradientExhaustive(layer, this->blob_bottom_vec_, this->blob_top_vec_);

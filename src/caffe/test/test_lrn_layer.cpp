@@ -17,7 +17,7 @@ using std::max;
 
 namespace caffe {
 
-    extern cudaDeviceProp caffe_TEST_CUDA_PROP;
+    extern cudaDeviceProp CAFFE_TEST_CUDA_PROP;
 
     template <typename Dtype>
     class LRNLayerTest : public ::testing::Test {
@@ -26,7 +26,7 @@ namespace caffe {
                 : blob_bottom_(new Blob<Dtype>()),
                   blob_top_(new Blob<Dtype>()) {};
         virtual void SetUp() {
-            caffe::set_random_seed(1701);
+            Caffe::set_random_seed(1701);
             blob_bottom_->Reshape(2, 7, 3, 3);
             // fill the values
             FillerParameter filler_param;
@@ -91,7 +91,7 @@ namespace caffe {
     TYPED_TEST(LRNLayerTest, TestCPUForward) {
         LayerParameter layer_param;
         LRNLayer<TypeParam> layer(layer_param);
-        caffe::set_mode(caffe::CPU);
+        Caffe::set_mode(Caffe::CPU);
         layer.SetUp(this->blob_bottom_vec_, &(this->blob_top_vec_));
         layer.Forward(this->blob_bottom_vec_, &(this->blob_top_vec_));
         Blob<TypeParam> top_reference;
@@ -108,7 +108,7 @@ namespace caffe {
     TYPED_TEST(LRNLayerTest, TestGPUForward) {
         LayerParameter layer_param;
         LRNLayer<TypeParam> layer(layer_param);
-        caffe::set_mode(caffe::GPU);
+        Caffe::set_mode(Caffe::GPU);
         layer.SetUp(this->blob_bottom_vec_, &(this->blob_top_vec_));
         layer.Forward(this->blob_bottom_vec_, &(this->blob_top_vec_));
         Blob<TypeParam> top_reference;
@@ -126,7 +126,7 @@ namespace caffe {
         LayerParameter layer_param;
         LRNLayer<TypeParam> layer(layer_param);
         GradientChecker<TypeParam> checker(1e-2, 1e-2);
-        caffe::set_mode(caffe::CPU);
+        Caffe::set_mode(Caffe::CPU);
         layer.SetUp(this->blob_bottom_vec_, &(this->blob_top_vec_));
         layer.Forward(this->blob_bottom_vec_, &(this->blob_top_vec_));
         for (int i = 0; i < this->blob_top_->count(); ++i) {
@@ -143,7 +143,7 @@ namespace caffe {
         LayerParameter layer_param;
         LRNLayer<TypeParam> layer(layer_param);
         GradientChecker<TypeParam> checker(1e-2, 1e-2);
-        caffe::set_mode(caffe::GPU);
+        Caffe::set_mode(Caffe::GPU);
         layer.SetUp(this->blob_bottom_vec_, &(this->blob_top_vec_));
         layer.Forward(this->blob_bottom_vec_, &(this->blob_top_vec_));
         for (int i = 0; i < this->blob_top_->count(); ++i) {

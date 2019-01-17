@@ -40,7 +40,7 @@ namespace caffe {
         int height_col = (height - ksize) / stride + 1;
         int width_col = (width - ksize) / stride + 1;
         int num_kernels = channels * height_col * width_col;
-        im2col_gpu_kernel<Dtype><<<caffe_GET_BLOCKS(num_kernels), caffe_CUDA_NUM_THREADS>>>(
+        im2col_gpu_kernel<Dtype><<<CAFFE_GET_BLOCKS(num_kernels), CAFFE_CUDA_NUM_THREADS>>>(
                 num_kernels, data_im, height, width, ksize, stride, height_col, width_col,
                         data_col);
         CUDA_POST_KERNEL_CHECK;
@@ -59,6 +59,7 @@ namespace caffe {
                                       const int height, const int width, const int channels, const int ksize,
                                       const int stride, const int height_col, const int width_col, Dtype* data_im) {
         int index = threadIdx.x + blockIdx.x * blockDim.x;
+        Dtype val = 0;
         if (index < n) {
             int w = index % width;
             int h = (index / width) % height;
@@ -74,8 +75,9 @@ namespace caffe {
                     //int c_col = c * ksize * ksize + (h - h_col * stride) * ksize + (w - w_col * stride);
                     //data_im[index] += data_col[(c_col * height_col + h_col) * width_col + w_col];
                     int c_col = c * ksize * ksize + (h - h_col * stride) * ksize + (w - w_col * stride);
-                    data_im[index] += data_col[(c_col * height_col + h_col) * width_col + w_col];
+                     val += data_col[(c_col * height_col + h_col) * width_col + w_col];
                 }
+                data_im[index] = val;
             }
         }
     }
@@ -84,13 +86,13 @@ namespace caffe {
     void col2im_gpu(const Dtype* data_col, const int channels,
                     const int height, const int width, const int ksize, const int stride,
                     Dtype* data_im) {
-        CUDA_CHECK(cudaMemset(data_im, 0, sizeof(Dtype) * height * width * channels));
+//        CUDA_CHECK(cudaMemset(data_im, 0, sizeof(Dtype) * height * width * channels));
         int height_col = (height - ksize) / stride + 1;
         int width_col = (width - ksize) / stride + 1;
         int num_kernels = channels * height * width;
         // To avoid involving atomic operations, we will launch one kernel per
         // bottom dimension, and then in the kernel add up the top dimensions.
-        col2im_gpu_kernel<Dtype><<<caffe_GET_BLOCKS(num_kernels), caffe_CUDA_NUM_THREADS>>>(
+        col2im_gpu_kernel<Dtype><<<CAFFE_GET_BLOCKS(num_kernels), CAFFE_CUDA_NUM_THREADS>>>(
                 num_kernels, data_col, height, width, channels, ksize, stride,
                         height_col, width_col, data_im);
         CUDA_POST_KERNEL_CHECK;

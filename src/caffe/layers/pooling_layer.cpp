@@ -9,10 +9,9 @@
 
 using std::min;
 using std::max;
+const float CAFFE_MAX_POOLING_THRESHOLD = 1e-8f;
 
 namespace caffe{
-
-    const float CAFFE_MAX_POOLING_THRESHOLD = 1e-8;
 
     template <typename Dtype>
     void PoolingLayer<Dtype>::SetUp(const vector<Blob<Dtype> *> &bottom, vector<Blob<Dtype> *> *top) {

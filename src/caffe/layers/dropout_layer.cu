@@ -27,9 +27,9 @@ namespace caffe {
         Dtype* top_data = (*top)[0]->mutable_cpu_data();
         const int count = bottom[0]->count();
 
-        if(caffe::phase() == caffe::TRAIN){
+        if(Caffe::phase() == Caffe::TRAIN){
             int* mask = (int*)(rand_vec_->mutable_cpu_data());
-            viRngBernoulli(VSL_RNG_METHOD_BERNOULLI_ICDF, caffe::vsl_stream(), count, mask, 1. - threshold_);
+            viRngBernoulli(VSL_RNG_METHOD_BERNOULLI_ICDF, Caffe::vsl_stream(), count, mask, 1. - threshold_);
             for (int i = 0; i<count; ++i){
                 top_data[i] = bottom_data[i] * mask[i] * scale_;
             }
@@ -42,7 +42,7 @@ namespace caffe {
     template <typename Dtype>
     Dtype DropoutLayer<Dtype>::Backward_cpu(const vector<Blob<Dtype> *> &top, const bool propagate_down,
                                             vector<Blob<Dtype> *> *bottom) {
-        CHECK(caffe::phase() == caffe::TRAIN);
+        CHECK(Caffe::phase() == Caffe::TRAIN);
         if(propagate_down){
             const Dtype* top_diff = top[0]->cpu_diff();
             Dtype* bottom_diff = (*bottom)[0]->mutable_cpu_diff();
@@ -70,12 +70,12 @@ namespace caffe {
         const Dtype* bottom_data = bottom[0]->gpu_data();
         Dtype* top_data = (*top)[0]->mutable_gpu_data();
         const int count = bottom[0]->count();
-        if (caffe::phase() == caffe::TRAIN) {
+        if (Caffe::phase() == Caffe::TRAIN) {
             // Create random numbers
-            CURAND_CHECK(curandGenerate(caffe::curand_generator(),
+            CURAND_CHECK(curandGenerate(Caffe::curand_generator(),
                                         (unsigned int*)(rand_vec_->mutable_gpu_data()), count));
             // set thresholds
-            DropoutForward<Dtype><<<caffe_GET_BLOCKS(count), caffe_CUDA_NUM_THREADS>>>(
+            DropoutForward<Dtype><<<CAFFE_GET_BLOCKS(count), CAFFE_CUDA_NUM_THREADS>>>(
                     count, bottom_data, (unsigned int*)(rand_vec_->gpu_data()), uint_thres_, scale_,
                             top_data);
             CUDA_POST_KERNEL_CHECK;
@@ -100,13 +100,13 @@ namespace caffe {
     Dtype DropoutLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
                                             const bool propagate_down,
                                             vector<Blob<Dtype>*>* bottom) {
-        CHECK(caffe::phase() == caffe::TRAIN);
+        CHECK(Caffe::phase() == Caffe::TRAIN);
         if (propagate_down) {
             const Dtype* top_diff = top[0]->gpu_diff();
             Dtype* bottom_diff = (*bottom)[0]->mutable_gpu_diff();
             const unsigned int* mask = (unsigned int*)(rand_vec_->gpu_data());
             const int count = (*bottom)[0]->count();
-            DropoutBackward<Dtype><<<caffe_GET_BLOCKS(count), caffe_CUDA_NUM_THREADS>>>(
+            DropoutBackward<Dtype><<<CAFFE_GET_BLOCKS(count), CAFFE_CUDA_NUM_THREADS>>>(
                     count, top_diff, mask, uint_thres_, scale_,
                             bottom_diff);
             CUDA_POST_KERNEL_CHECK;

@@ -10,7 +10,7 @@
 
 
 namespace caffe{
-    cudaDeviceProp caffe_TEST_CUDA_PROP;
+    cudaDeviceProp CAFFE_TEST_CUDA_PROP;
 }
 
 using namespace std;

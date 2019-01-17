@@ -32,7 +32,7 @@ class GemmTest : public ::testing::Test{};
         memcpy(A.mutable_cpu_data(), data, 6 * sizeof(TypeParam));
         memcpy(B.mutable_cpu_data(), data, 12 * sizeof(TypeParam));
 
-        if (sizeof(TypeParam) == 4 || caffe_TEST_CUDA_PROP.major >= 2) {
+        if (sizeof(TypeParam) == 4 || CAFFE_TEST_CUDA_PROP.major >= 2) {
             //[1,2,3; 4 5 6] * [1,2,3,4; 5,6,7,8; 9,10,11,12];
             caffe_cpu_gemm<TypeParam>(CblasNoTrans, CblasNoTrans, 2, 4, 3, 1.,
                                       A.cpu_data(), B.cpu_data(), 0., C.mutable_cpu_data());
@@ -101,7 +101,7 @@ class GemmTest : public ::testing::Test{};
         memcpy(A.mutable_cpu_data(), data, 6 * sizeof(TypeParam));
         memcpy(x.mutable_cpu_data(), data, 3 * sizeof(TypeParam));
 
-        if (sizeof(TypeParam) == 4 || caffe_TEST_CUDA_PROP.major >= 2) {
+        if (sizeof(TypeParam) == 4 || CAFFE_TEST_CUDA_PROP.major >= 2) {
             caffe_cpu_gemv<TypeParam>(CblasNoTrans, 2, 3, 1., A.cpu_data(),
                                       x.cpu_data(), 0., y.mutable_cpu_data());
             for (int i = 0; i < 2; ++i) {

@@ -1,5 +1,5 @@
-#ifndef caffe_LAYER_H_
-#define caffe_LAYER_H_
+#ifndef CAFFE_LAYER_H_
+#define CAFFE_LAYER_H_
 
 #include <vector>
 #include "caffe/blob.hpp"
@@ -70,15 +70,15 @@ namespace caffe {
     template <typename Dtype>
     inline void Layer<Dtype>::Forward(const vector<Blob<Dtype>*>& bottom,
                                       vector<Blob<Dtype>*>* top) {
-        switch(caffe::mode()) {
-            case caffe::CPU:
+        switch(Caffe::mode()) {
+            case Caffe::CPU:
                 Forward_cpu(bottom, top);
                 break;
-            case caffe::GPU:
+            case Caffe::GPU:
                 Forward_gpu(bottom, top);
                 break;
             default:
-                LOG(FATAL) << "Unknown caffe mode.";
+                LOG(FATAL) << "Unknown Caffe mode.";
         }
     };
 
@@ -86,16 +86,16 @@ namespace caffe {
     inline Dtype Layer<Dtype>::Backward(const vector<Blob<Dtype>*>& top,
                                         const bool propagate_down,
                                         vector<Blob<Dtype>*>* bottom) {
-        switch(caffe::mode()) {
-            case caffe::CPU:
+        switch(Caffe::mode()) {
+            case Caffe::CPU:
                 return Backward_cpu(top, propagate_down, bottom);
-            case caffe::GPU:
+            case Caffe::GPU:
                 return Backward_gpu(top, propagate_down, bottom);
             default:
-                LOG(FATAL) << "Unknown caffe mode.";
+                LOG(FATAL) << "Unknown Caffe mode.";
         }
     };
 
 }  // namespace caffe
 
-#endif  // caffe_LAYER_H_
+#endif  // Caffe_LAYER_H_

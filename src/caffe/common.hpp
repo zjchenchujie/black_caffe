@@ -1,5 +1,5 @@
-#ifndef caffe_COMMON_HPP_
-#define caffe_COMMON_HPP_
+#ifndef CAFFE_COMMON_HPP_
+#define CAFFE_COMMON_HPP_
 
 #include <iostream>
 
@@ -30,16 +30,16 @@
 namespace caffe {
 using boost::shared_ptr;
 
-const int caffe_CUDA_NUM_THREADS = 512;
+const int CAFFE_CUDA_NUM_THREADS = 512;
 
-inline int caffe_GET_BLOCKS(const int N){
-    return (N + caffe_CUDA_NUM_THREADS -1) / caffe_CUDA_NUM_THREADS;
+inline int CAFFE_GET_BLOCKS(const int N){
+    return (N + CAFFE_CUDA_NUM_THREADS -1) / CAFFE_CUDA_NUM_THREADS;
 }
 
-class caffe{
+class Caffe{
 public:
-    ~caffe();
-    static caffe& Get();
+    ~Caffe();
+    static Caffe& Get();
     enum Brew {CPU, GPU};
     enum Phase {TRAIN, TEST};
     static cublasHandle_t cublas_handle();
@@ -53,8 +53,8 @@ public:
     static void set_random_seed(unsigned int seed);
 
 private:
-    caffe();
-    static shared_ptr<caffe> singleton_;
+    Caffe();
+    static shared_ptr<Caffe> singleton_;
     cublasHandle_t cublas_handle_;
     curandGenerator_t curand_generator_;
     VSLStreamStatePtr vsl_stream_;
