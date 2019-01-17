@@ -42,14 +42,25 @@ public:
     static Caffe& Get();
     enum Brew {CPU, GPU};
     enum Phase {TRAIN, TEST};
+
+    // The getters for the variables.
+    // Returns the cublas handle.
     static cublasHandle_t cublas_handle();
+    // Returns the curand generator
     static curandGenerator_t curand_generator();
+    // Returns the MKL random stream
     static VSLStreamStatePtr vsl_stream();
+    // Returns the working mode: working on CPU or GPU
     static Brew mode();
+    // Returns the working phase: Training or TEST
     static Phase phase();
 
+    // The setter for variables
+    // Set the working mode: CPU or GPU
     static void set_mode(Brew mode);
+    // set the working phase: TRAIN or TEST
     static void set_phase(Phase phase);
+    // set the random seed for both MKL or curand
     static void set_random_seed(unsigned int seed);
 
 private:
